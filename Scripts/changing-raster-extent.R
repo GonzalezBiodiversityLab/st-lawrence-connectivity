@@ -21,7 +21,7 @@ primaryStratum<-raster("primaryStratum.tif")
 # I will be referring to this raster as "original raster" throughout
 primaryStratum
 
-# Create a new raster named OutaouaisStudyExtent
+# Create a new raster named OutaouaisConnectivityExtent
 # ymx and ymn values were retained from the primaryStratum raster
 # xmx and xmn were calculated manually where 1km = 1000 pixels
 # ncol and nrow were calulated using (xmx-xmn)/90 and (ymx-ymn)/90, respectively
