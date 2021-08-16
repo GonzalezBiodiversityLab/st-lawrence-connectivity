@@ -21,29 +21,33 @@ primaryStratum<-raster("primaryStratum.tif")
 # I will be referring to this raster as "original raster" throughout
 primaryStratum
 
-# Create a new raster named newRaster
-newRaster <- raster(ncol=3333, nrow=3175, xmn=-691380, xmx=-391410, ymn=117930, ymx=403680)
+# Create a new raster named OutaouaisStudyExtent
+# ymx and ymn values were retained from the primaryStratum raster
+# xmx and xmn were calculated manually where 1km = 1000 pixels
+# ncol and nrow were calulated using (xmx-xmn)/90 and (ymx-ymn)/90, respectively
+OutaouaisConnectivityExtent <- raster(ncol=3333, nrow=3175, xmn=-691380, xmx=-391410, ymn=117930, ymx=403680)
 
 # Check your raster metadata
-newRaster
+OutaouaisConnectivityExtent
 
 # Give each of your cells a value
-values(newRaster) <- rep(1, ncell(newRaster))
+# We'll just be giving the entire raster a value of 1
+values(OutaouaisConnectivityExtent) <- rep(1, ncell(OutaouaisConnectivityExtent))
 
 # Check your raster metadata to see if it worked
-newRaster
+OutaouaisConnectivityExtent
 
 # Plot your raster to see if it works
-x11(); plot(newRaster)
+x11(); plot(OutaouaisConnectivityExtent)
 
 # Give your raster the same coordinate reference system as the original raster
-crs(newRaster) <- crs(primaryStratum)
+crs(OutaouaisConnectivityExtent) <- crs(primaryStratum)
 
 # Look at your raster metadata to see if it worked
-newRaster
+OutaouaisConnectivityExtent
 
 # Compare with the original raster
 primaryStratum
 
 # Export the resulting raster
-writeRaster(newRaster, "C:/Enter/File/Path/newRaster.tif", format = "GTiff", overwrite=TRUE)
+writeRaster(OutaouaisConnectivityExtent, "C:/Enter/File/Path/OutaouaisConnectivityExtent.tif", format = "GTiff", overwrite=TRUE)
