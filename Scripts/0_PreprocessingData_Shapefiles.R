@@ -34,6 +34,8 @@ protectedareaName <- "AP_REG_S_20210824.shp"
 landcoverBTSLPolyName <-  "BTSL_SLL_Occ_sol_Land_cover.shp"
 roadName <- "AQ_Routes_l_20210701.shp"
 siefName <- "SIEF_C08PEEFO.shp"
+countyName <- "MRC_s_2021_02.shp"
+privatelandName <- "RMN_20210608.shp"
 #landcoverBufferName <- "utilisation_territoire_2016"
 
 ###############
@@ -44,29 +46,29 @@ if(doGRASSSetup){
   # Manually set up empty GRASS database - see GRASSTemplate
   initGRASS(gisBase=gisBase, gisDbase=gisDbase, location=paste0('BTSL_', myResolution, 'm'), mapset='PERMANENT', override=TRUE)
   
-  execGRASS("g.proj", georef=file.path(rawMapsDir, landcoverBTSLPolyName), flags="c")
+  execGRASS("g.proj", georef=file.path(rawMapsDir, studyareaName), flags="c")
   
   # Initialize new mapset inheriting projection info
   execGRASS("g.mapset", mapset = "RawData", flags="c")
-
+  
+  # JL
   # Load layers into grass database
-  execGRASS("v.in.ogr", input=rawMapsDir, layer=siefName, output="rawDataSiefName", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=file.path(rawMapsDir, landcoverBTSLPolyName), output="rawDataLandcoverBTSL", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=paste0(rawMapsDir, ageName), output="rawDataForestAge", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=paste0(rawMapsDir, densityName), output="rawDataForestDensity", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=paste0(rawMapsDir, depositName), output="rawDataDeposit", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=paste0(rawMapsDir, drainageName), output="rawDataDrainage", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=paste0(rawMapsDir, studyAreaName), output="rawDataStudyArea", flags=c("overwrite", "o"))
-  execGRASS("v.in.ogr", input=rawMapsDir, layer=roadName, output="rawDataRoad", flags=c("overwrite", "o"))
-  #execGRASS("r.in.gdal", input=paste0(rawMapsDir, waterName), output="rawDataWaterStLaurent", flags=c("overwrite", "o"))
+  execGRASS("v.in.ogr", input=file.path(rawMapsDir, siefName), output="rawDataSief", flags=c("overwrite", "o"))
+  execGRASS("v.in.ogr", input=file.path(rawMapsDir, landcoverBTSLPolyName), output="rawDataLandcoverBTSLPoly", flags=c("overwrite", "o"))
+  execGRASS("v.in.ogr", input=file.path(rawMapsDir, roadName), output="rawDataRoad", flags=c("overwrite", "o"))
+  execGRASS("v.in.ogr", input=file.path(rawMapsDir, protectedareaName), output="rawDataProtectedArea", flags=c("overwrite", "o"))
+  execGRASS("v.in.ogr", input=file.path(rawMapsDir, countyName), output="rawDataCounty", flags=c("overwrite", "o"))
+  execGRASS("v.in.ogr", input=file.path(rawMapsDir, privatelandName), output="rawDataPrivateLand", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(rawMapsDir, studyareaName), output="rawDataExtent", flags=c("overwrite", "o")) #this needs to be redone
 }else{
   initGRASS(gisBase=gisBase, gisDbase=gisDbase, location=paste0('BTSL_', myResolution, 'm'), mapset="RawData", override=TRUE)
 }
 
 # Set the geographic region
-#execGRASS('g.region', n='403680', e='-95520', w='-491430', s='124830')
-execGRASS('g.region', n='403680', e='-95520', w='-491430', s='117960')
+execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930')
 
+# check your geographic location
+execGRASS("g.region", flags = "p")
 
 ###############################################
 # Study Area, Age, Density, Drainage, Deposit #
