@@ -1,7 +1,8 @@
 # a254
 # Bronwyn Rayfield and Jed Lloren, ApexRMS
 # Run with R-4.1.1                                
-# N.B. Spatial layers were originally received as geodatabase and manually converted to shapefiles before reading into R
+# NB: Spatial layers were originally received as geodatabase and manually converted to shapefiles in QGIS before running code on line 32
+# NB: OutaouaisConnectivityExtent.tif was created previously to determine the Phase 4 study extent
 
 # JL
 # Workspace---------------------------------------------------------------------------------------------
@@ -28,6 +29,7 @@ rawMapsDir <- "../Data/Spatial"
 rawTablesDir <- "../Inputs/RawData/Tables"
 processedMapsDir <- "../Inputs/ProcessedData/Maps"
 
+#JL
 # Raw data filenames
 studyareaName <- "OutaouaisConnectivityExtent.tif"
 protectedareaName <- "AP_REG_S_20210824.shp"
