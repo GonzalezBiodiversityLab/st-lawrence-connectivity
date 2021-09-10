@@ -40,9 +40,7 @@ countyName <- "MRC_s_2021_02.shp"
 privatelandName <- "RMN_20210608.shp"
 #landcoverBufferName <- "utilisation_territoire_2016"
 
-###############
-# GRASS setup #
-###############
+# GRASS setup---------------------------------------------------------------------------------------------
 if(doGRASSSetup){
   #https://gis.stackexchange.com/questions/183032/create-a-new-grass-database-in-r-with-crs-projection
   # Manually set up empty GRASS database - see GRASSTemplate
@@ -70,26 +68,25 @@ if(doGRASSSetup){
 execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930')
 
 # check your geographic location
-execGRASS("g.region", flags = "p")
+execGRASS("g.region", flags = "p") # only included in the working file, to be removed later
 
-###############################################
-# Study Area, Age, Density, Drainage, Deposit #
-###############################################
+# Reclassify layers---------------------------------------------------------------------------------------------
+# Study Area, Age, Density, Drainage, Deposit
 # NB No need to reclassify forest density or drainage
 # Study area
 # Fix NA values in study area layer (255=NULL)
 write.table(c('1=1','255=NULL'), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='rawDataStudyArea', output='studyArea1', rules='rule.txt', flags=c('overwrite'))
+execGRASS('r.reclass', input='rawDataStudyArea', output='studyArea1', rules='rule.txt', flags=c('overwrite')) # not run
 
 # Forest age - reclassify
-rcl<-read.csv(paste0(rawTablesDir, "ageReclass.csv"), header=TRUE)[,c('Value','Code')]
-write.table(paste0(rcl[,'Value'], '=', rcl[,'Code']), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='rawDataForestAge', output='forestAge', rules='rule.txt', flags=c('overwrite'))
+rcl<-read.csv(file.path(rawTablesDir, "forestAgeReclass.csv"), header=TRUE)[,c('CL_AGE','Code')]
+write.table(rcl, file="../Inputs/RawData/Tables/forestAgeRules.txt", sep=" ", col.names=FALSE, quote=FALSE, row.names=FALSE)
+execGRASS('v.reclass', input='rawDataSief', output='forestAge', rules=file.path(rawTablesDir, "forestAgeRules.txt"), flags=c('overwrite'))
 
 # Surficial deposit - reclassify
-rcl<-read.csv(paste0(rawTablesDir, "depositReclass.csv"),header=TRUE)[,c('Value','Recode')]
-write.table(paste0(rcl[,'Value'], '=', rcl[,'Recode']), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='rawDataDeposit', output='deposit', rules='rule.txt', flags=c('overwrite'))
+rcl<-read.csv(file.path(rawTablesDir, "depositReclass.csv"),header=TRUE)[,c('DEP_SUR','Recode')]
+write.table(rcl, file="../Inputs/RawData/Tables/depositRules.txt", sep=" ", col.names=FALSE, quote=FALSE, row.names=FALSE)
+execGRASS('v.reclass', input='rawDataSief', output='deposit', rules=file.path(rawTablesDir, "depositRules.txt"), flags=c('overwrite'))
 
 
 ##################
