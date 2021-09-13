@@ -34,13 +34,13 @@ depositMerge <- merge(siefDataRaw, depositReclass, all.x = TRUE, all.y = FALSE)
 # Rasterize, crop, and mask to study area
 # Forest age
 forestAge <- fasterize(sf = st_cast(forestAgeMerge, "MULTIPOLYGON"), 
-                   raster = studyArea, # Snap to evt grid
+                   raster = studyArea, # Snap to Outaouais connectivity boundaries
                    field = "Code") %>% 
   mask(., mask=studyArea)
 
 # Surficial deposits
 surficialDeposits <- fasterize(sf = st_cast(depositMerge, "MULTIPOLYGON"), 
-                       raster = studyArea, # Snap to evt grid
+                       raster = studyArea, # Snap to Outaouais connectivity boundaries
                        field = "Recode") %>% 
   mask(., mask=studyArea)
 
