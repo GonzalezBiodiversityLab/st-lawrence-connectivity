@@ -32,10 +32,12 @@ processedMapsDir <- "../Inputs/ProcessedData/Maps"
 #JL
 # Raw data filenames
 studyareaName <- "OutaouaisConnectivityExtent.tif"
+forestageName <- "forestAge.tif"
 protectedareaName <- "AP_REG_S_20210824.shp"
 landcoverBTSLPolyName <-  "BTSL_SLL_Occ_sol_Land_cover.shp"
 roadName <- "AQ_Routes_l_20210701.shp"
 siefName <- "SIEF_C08PEEFO.shp"
+surficialdepositName <- "surficialDeposits.tif"
 countyName <- "MRC_s_2021_02.shp"
 privatelandName <- "RMN_20210608.shp"
 #landcoverBufferName <- "utilisation_territoire_2016"
@@ -59,7 +61,9 @@ if(doGRASSSetup){
   execGRASS("v.in.ogr", input=file.path(rawMapsDir, protectedareaName), output="rawDataProtectedArea", flags=c("overwrite", "o"))
   execGRASS("v.in.ogr", input=file.path(rawMapsDir, countyName), output="rawDataCounty", flags=c("overwrite", "o"))
   execGRASS("v.in.ogr", input=file.path(rawMapsDir, privatelandName), output="rawDataPrivateLand", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=file.path(rawMapsDir, studyareaName), output="rawDataExtent", flags=c("overwrite", "o")) #this needs to be redone
+  execGRASS("r.in.gdal", input=file.path(rawMapsDir, studyareaName), output="rawDataExtent", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(rawMapsDir, forestageName), output="rawDataForestAge", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(rawMapsDir, surficialdepositName), output="rawDataSurficialDeposits", flags=c("overwrite", "o"))
 }else{
   initGRASS(gisBase=gisBase, gisDbase=gisDbase, location=paste0('BTSL_', myResolution, 'm'), mapset="RawData", override=TRUE)
 }
@@ -72,34 +76,18 @@ execGRASS("g.region", flags = "p") # only included in the working file, to be re
 
 # Reclassify layers---------------------------------------------------------------------------------------------
 # Study Area, Age, Density, Drainage, Deposit
-# NB No need to reclassify forest density or drainage
-# Study area
-# Fix NA values in study area layer (255=NULL)
-write.table(c('1=1','255=NULL'), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='rawDataStudyArea', output='studyArea1', rules='rule.txt', flags=c('overwrite')) # not run
+# NB: No need to reclassify any of the listed layers
 
-# Forest age - reclassify
-rcl<-read.csv(file.path(rawTablesDir, "forestAgeReclass.csv"), header=TRUE)[,c('CL_AGE','Code')]
-write.table(rcl, file="../Inputs/RawData/Tables/forestAgeRules.txt", sep=" ", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('v.reclass', input='rawDataSief', output='forestAge', rules=file.path(rawTablesDir, "forestAgeRules.txt"), flags=c('overwrite'))
-
-# Surficial deposit - reclassify
-rcl<-read.csv(file.path(rawTablesDir, "depositReclass.csv"),header=TRUE)[,c('DEP_SUR','Recode')]
-write.table(rcl, file="../Inputs/RawData/Tables/depositRules.txt", sep=" ", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('v.reclass', input='rawDataSief', output='deposit', rules=file.path(rawTablesDir, "depositRules.txt"), flags=c('overwrite'))
-
-
-##################
-# Landcover BTSL #
-##################
+# Landcover BTSL---------------------------------------------------------------------------------------------
 # Reclass tables
-speciesLandcoverReclass <- read.csv(paste0(rawTablesDir, "speciesLandcoverReclass.csv"), header=TRUE)
-landcoverReclass <- read.csv(paste0(rawTablesDir, "landcoverBTSLReclass.csv"), header=TRUE)
-roadReclassBDTQ <- read.csv(paste0(rawTablesDir, "roadReclassBDTQ.csv"), header=TRUE)
+speciesLandcoverReclass <- read.csv(file.path(rawTablesDir, "speciesLandcoverReclass.csv"), header=TRUE)
+landcoverReclassRaw <- read.csv(file.path(rawTablesDir, "landcoverBTSLReclass.csv"), header=TRUE)
+roadReclassBDTQ <- read.csv(file.path(rawTablesDir, "roadReclassBDTQ.csv"), header=TRUE)
 
 # Reclassify landcover in BTSL to match Albert et al. classes
-write.table(paste0(landcoverReclass[,'Value'],'=', landcoverReclass[,'Code']), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='rawDataLandcoverBTSL', output='landcoverBTSL1_', rules='rule.txt', flags=c('overwrite'))
+landcoverReclass<-landcoverReclassRaw[, c("Value", "Code")]
+write.table(landcoverReclass, file="../Inputs/RawData/Tables/landReclassRule.txt", sep="=", col.names=FALSE, quote=FALSE, row.names=FALSE)
+execGRASS('r.reclass', input='rawDataLandcoverBTSL', output='landcoverBTSL1_', rules='landReclassRule.txt', flags=c('overwrite')) # I did not run this line
 
 # Fix broken linear features by extracting them, rasterizing them at higher resolution, and then reimposing them on the landcover raster
 # Extract linear agriculture (i.e. "Milieu agricole non cultivé")
@@ -113,7 +101,7 @@ execGRASS("v.to.rast", input="landcoverAgLinearPoly", use="val", value=agLinearC
 execGRASS('g.region', res=paste0(myResolution))
 execGRASS('r.resamp.stats', input="landcoverAgLinearRas_2m", output=paste0("landcoverAgLinearRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
 # Impose linear agriculture on landcover map
-execGRASS('r.patch', input="landcoverAgLinearRas,landcoverBTSL1", output='landcoverBTSL2', flags=c("overwrite"))
+execGRASS('r.patch', input="landcoverAgLinearRas,landcoverBTSL1", output='landcoverBTSL2', flags=c("overwrite")) # I did not run this line
 
 # Extract roads from landcover map
 minorRoadCode <- speciesLandcoverReclass$LandcoverCode[speciesLandcoverReclass$LandcoverName == "MinorRoads"]
