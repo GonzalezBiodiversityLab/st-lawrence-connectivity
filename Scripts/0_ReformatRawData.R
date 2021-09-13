@@ -23,11 +23,11 @@ rawTablesDir <- "../Inputs/RawData/Tables"
 siefDataRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="SIEF_C08PEEFO")
 studyArea <- raster(file.path(rawMapsDir, "BTSLOutaouais.tif"))
 
-# Table
+# Tabular
 forestAgeReclass <- read_csv(file.path(rawTablesDir, "forestAgeReclass.csv"))
 depositReclass <- read_csv(file.path(rawTablesDir, "depositReclass.csv"))
 
-# Merge the layer and reclass tables according to 
+# Merge the layer and reclass tables according to 1) forest age and 2) surficial deposits
 forestAgeMerge <- merge(siefDataRaw, forestAgeReclass, all.x = TRUE, all.y = FALSE)
 depositMerge <- merge(siefDataRaw, depositReclass, all.x = TRUE, all.y = FALSE)
 
