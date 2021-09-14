@@ -27,30 +27,32 @@ studyArea <- raster(file.path(rawMapsDir, "BTSLOutaouais.tif"))
 forestAgeReclass <- read_csv(file.path(rawTablesDir, "forestAgeReclass.csv"))
 depositReclass <- read_csv(file.path(rawTablesDir, "depositReclass.csv"))
 
-# Merge the layer and reclass tables according to 1) forest age and 2) surficial deposits
-forestAgeMerge <- merge(siefDataRaw, forestAgeReclass, all.x = TRUE, all.y = FALSE)
-depositMerge <- merge(siefDataRaw, depositReclass, all.x = TRUE, all.y = FALSE)
-
-# Rasterize, crop, and mask to study area
+# Reformatting data---------------------------------------------------------------------------------------------
 # Forest age
+# Merge the layer and reclass tables
+forestAgeMerge <- siefDataRaw %>%
+  left_join(forestAgeReclass)
+# Rasterize, crop, and mask to study area
 forestAge <- fasterize(sf = st_cast(forestAgeMerge, "MULTIPOLYGON"), 
-                   raster = studyArea, # Snap to Outaouais connectivity boundaries
-                   field = "Code") %>% 
+                       raster = studyArea, # Snap to Outaouais connectivity boundaries
+                       field = "Value") %>% 
   mask(., mask=studyArea)
-
+    
 # Surficial deposits
+depositMerge <- siefDataRaw %>%
+  left_join(depositReclass)
+
 surficialDeposits <- fasterize(sf = st_cast(depositMerge, "MULTIPOLYGON"), 
                        raster = studyArea, # Snap to Outaouais connectivity boundaries
-                       field = "Recode") %>% 
+                       field = "Value") %>% 
   mask(., mask=studyArea)
 
 # Save outputs---------------------------------------------------------------------------------------------
 # Forest age
 writeRaster(forestAge, 
-            file.path(rawMapsDir, "forestAge.tif"), 
+            file.path(rawMapsDir, "SIEF_C08PEEFO-forest-age.tif"), 
             overwrite = TRUE)
-
 # Surficial deposits
 writeRaster(surficialDeposits, 
-            file.path(rawMapsDir, "surficialDeposits.tif"), 
+            file.path(rawMapsDir, "SIEF_C08PEEFO-surficial-deposits.tif"), 
             overwrite = TRUE)
