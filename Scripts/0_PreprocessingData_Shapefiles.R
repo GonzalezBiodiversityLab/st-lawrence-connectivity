@@ -119,7 +119,7 @@ execGRASS("v.to.rast", input="landcoverAgLinearPoly", use="val", value=agLinearC
 execGRASS('g.region', res=paste0(myResolution))
 execGRASS('r.resamp.stats', input="landcoverAgLinearRas_2m", output=paste0("landcoverAgLinearRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
 # Impose linear agriculture on landcover map
-execGRASS('r.patch', input="landcoverAgLinearRas,landcoverBTSLReclass", output='landcoverBTSL', flags=c("overwrite")) # I did not run this line
+execGRASS('r.patch', input=paste0("landcoverAgLinearRas_", myResolution, "m,landcoverBTSLReclass"), output=paste0("landcoverBTSL", myResolution, "m"), flags=c("overwrite"))
 
 # Extract roads from landcover map
 minorRoadCode <- speciesLandcoverReclass$LandcoverCode[speciesLandcoverReclass$LandcoverName == "MinorRoads"]
