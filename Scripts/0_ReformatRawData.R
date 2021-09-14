@@ -20,21 +20,32 @@ rawTablesDir <- "../Inputs/RawData/Tables"
 
 # Read in data
 # Spatial
+landcoverBTSLRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="BTSL_SLL_Occ_sol_Land_cover")
 siefDataRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="SIEF_C08PEEFO")
-studyArea <- raster(file.path(rawMapsDir, "BTSLOutaouais.tif"))
+studyArea <- raster(file.path(rawMapsDir, "BTSL-Outaouais.tif"))
 
 # Tabular
+landcoverBTSLReclass <- read_csv(file.path(rawTablesDir, "landcoverBTSLReclass.csv"))
 forestAgeReclass <- read_csv(file.path(rawTablesDir, "forestAgeReclass.csv"))
 depositReclass <- read_csv(file.path(rawTablesDir, "depositReclass.csv"))
 
 # Reformatting data---------------------------------------------------------------------------------------------
 # Forest age
 # Merge the layer and reclass tables
+landcoverMerge <- landcoverBTSLRaw %>%
+  left_join(landcoverBTSLReclass)
+# Rasterize, crop, and mask to study area
+landcoverBTSL <- fasterize(sf = st_cast(landcoverMerge, "MULTIPOLYGON"), 
+                       raster = studyArea, # Snap to Outaouais connectivity boundaries
+                       field = "Value") %>% 
+  mask(., mask=studyArea)
+
+# Forest age
 forestAgeMerge <- siefDataRaw %>%
   left_join(forestAgeReclass)
-# Rasterize, crop, and mask to study area
+
 forestAge <- fasterize(sf = st_cast(forestAgeMerge, "MULTIPOLYGON"), 
-                       raster = studyArea, # Snap to Outaouais connectivity boundaries
+                       raster = studyArea,
                        field = "Value") %>% 
   mask(., mask=studyArea)
     
@@ -43,16 +54,20 @@ depositMerge <- siefDataRaw %>%
   left_join(depositReclass)
 
 surficialDeposits <- fasterize(sf = st_cast(depositMerge, "MULTIPOLYGON"), 
-                       raster = studyArea, # Snap to Outaouais connectivity boundaries
+                       raster = studyArea,
                        field = "Value") %>% 
   mask(., mask=studyArea)
 
 # Save outputs---------------------------------------------------------------------------------------------
+# Landcover
+writeRaster(landcoverBTSL, 
+            file.path(rawMapsDir, "BTSL-SLL-Occ-sol-Land-cover.tif"), 
+            overwrite = TRUE)
 # Forest age
 writeRaster(forestAge, 
-            file.path(rawMapsDir, "SIEF_C08PEEFO-forest-age.tif"), 
+            file.path(rawMapsDir, "SIEF-C08PEEFO-forest-age.tif"), 
             overwrite = TRUE)
 # Surficial deposits
 writeRaster(surficialDeposits, 
-            file.path(rawMapsDir, "SIEF_C08PEEFO-surficial-deposits.tif"), 
+            file.path(rawMapsDir, "SIEF-C08PEEFO-surficial-deposits.tif"), 
             overwrite = TRUE)
