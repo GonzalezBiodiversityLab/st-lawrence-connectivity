@@ -22,7 +22,8 @@ rawTablesDir <- "../Inputs/RawData/Tables"
 # Spatial
 landcoverBTSLRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="BTSL_SLL_Occ_sol_Land_cover")
 siefDataRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="SIEF_C08PEEFO")
-studyArea <- raster(file.path(rawMapsDir, "study-area.tif"))
+studyAreaRaw <- st_read(dsn = file.path(rawMapsDir, "CR_CERQ.gdb"), layer="CR_NIV_01_S")
+OutaouaisExtent <- raster(file.path(rawMapsDir, "OutaouaisConnectivityExtent.tif"))
 
 # Tabular
 landcoverBTSLReclass <- read_csv(file.path(rawTablesDir, "landcoverBTSLReclass.csv"))
@@ -36,27 +37,35 @@ landcoverMerge <- landcoverBTSLRaw %>%
   left_join(landcoverBTSLReclass, by = c("CLASSE_GEN" = "CLASSE_GEN")) # Default joins by CLASSE_GEN and CLASSE_DET
 # Rasterize, crop, and mask to study area
 landcoverBTSL <- fasterize(sf = st_cast(landcoverMerge, "MULTIPOLYGON"), 
-                       raster = studyArea, # Snap to Outaouais connectivity boundaries
+                       raster = OutaouaisExtent, # Snap to Outaouais connectivity boundaries
                        field = "Value") %>% 
-  mask(., mask=studyArea)
+  mask(., mask=OutaouaisExtent)
 
 # Forest age
 forestAgeMerge <- siefDataRaw %>%
   left_join(forestAgeReclass)
 
 forestAge <- fasterize(sf = st_cast(forestAgeMerge, "MULTIPOLYGON"), 
-                       raster = studyArea,
+                       raster = OutaouaisExtent,
                        field = "Value") %>% 
-  mask(., mask=studyArea)
+  mask(., mask=OutaouaisExtent)
     
 # Surficial deposits
 depositMerge <- siefDataRaw %>%
   left_join(depositReclass)
 
 surficialDeposits <- fasterize(sf = st_cast(depositMerge, "MULTIPOLYGON"), 
-                       raster = studyArea,
+                       raster = OutaouaisExtent,
                        field = "Value") %>% 
-  mask(., mask=studyArea)
+  mask(., mask=OutaouaisExtent)
+
+# Study area
+studyAreaRaw <- studyAreaRaw %>%
+  mutate(ID_Code = c(3, 4, 1, 2))
+studyArea <- fasterize(sf = st_cast(studyAreaRaw, "MULTIPOLYGON"), 
+                               raster = OutaouaisExtent,
+                               field = "ID_Code") %>% 
+  mask(., mask=OutaouaisExtent)
 
 # Save outputs---------------------------------------------------------------------------------------------
 # Landcover
@@ -70,4 +79,8 @@ writeRaster(forestAge,
 # Surficial deposits
 writeRaster(surficialDeposits, 
             file.path(rawMapsDir, "SIEF-C08PEEFO-surficial-deposits.tif"), 
+            overwrite = TRUE)
+# Study area
+writeRaster(studyArea, 
+            file.path(rawMapsDir, "study-area.tif"), 
             overwrite = TRUE)
