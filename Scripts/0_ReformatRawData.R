@@ -33,7 +33,7 @@ depositReclass <- read_csv(file.path(rawTablesDir, "depositReclass.csv"))
 # Forest age
 # Merge the layer and reclass tables
 landcoverMerge <- landcoverBTSLRaw %>%
-  left_join(landcoverBTSLReclass)
+  left_join(landcoverBTSLReclass, by = c("CLASSE_GEN" = "CLASSE_GEN")) # Default joins by CLASSE_GEN and CLASSE_DET
 # Rasterize, crop, and mask to study area
 landcoverBTSL <- fasterize(sf = st_cast(landcoverMerge, "MULTIPOLYGON"), 
                        raster = studyArea, # Snap to Outaouais connectivity boundaries
