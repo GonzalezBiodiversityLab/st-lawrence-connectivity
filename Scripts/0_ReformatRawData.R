@@ -22,7 +22,7 @@ rawTablesDir <- "../Inputs/RawData/Tables"
 # Spatial
 landcoverBTSLRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="BTSL_SLL_Occ_sol_Land_cover")
 siefDataRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="SIEF_C08PEEFO")
-studyArea <- raster(file.path(rawMapsDir, "BTSL-Outaouais.tif"))
+studyArea <- raster(file.path(rawMapsDir, "study-area.tif"))
 
 # Tabular
 landcoverBTSLReclass <- read_csv(file.path(rawTablesDir, "landcoverBTSLReclass.csv"))
