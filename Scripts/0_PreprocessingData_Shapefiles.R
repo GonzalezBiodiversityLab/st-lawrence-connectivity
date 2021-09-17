@@ -34,7 +34,7 @@ processedMapsDir <- "../Inputs/ProcessedData/Maps"
 countyName <- "MRC_s_2021_02.shp"
 densityName <- "OutaouaisConnectivityExtent.tif"
 forestageName <- "SIEF-C08PEEFO-forest-age.tif"
-landcoverBTSLPolyName <-  "BTSL-SLL-Occ-sol-Land-cover.shp"
+landcoverBTSLPolyName <-  "BTSL_SLL_Occ_sol_Land_cover.shp"
 landcoverBTSLName <-  "BTSL-SLL-Occ-sol-Land-cover.tif"
 landcoverBufferName <- "utilisation_territoire_2018.tif"
 privatelandName <- "RMN_20210608.shp"
@@ -145,29 +145,29 @@ execGRASS('r.mapcalc', expression=paste0("landcoverRoadPASL1 = if(isnull(landcov
 write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
 execGRASS('r.reclass', input='landcoverRoadPASL1', output='landcoverRoadPASL', rules='rule.txt', flags=c('overwrite'))
 
-# Add roads from BDTQ database
+# Add roads from AQ database
 # Minor
-roadMinorDetailedClasses <- roadReclassBDTQ$SQL_DESCRIPTIO[roadReclassBDTQ$Code == minorRoadCode]
+roadMinorDetailedClasses <- roadReclassAQ$SQL_DESCRIPTIO[roadReclassAQ$Code == minorRoadCode]
 whereString = paste0("DESCRIPTIO IN ('",paste(roadMinorDetailedClasses, collapse="','"),"')")
-execGRASS("v.extract", input="rawDataRoad", type="line", where=whereString, output="landcoverMinorRoadBDTQ", flags=c("overwrite"))
+execGRASS("v.extract", input="rawDataRoad", type="line", where=whereString, output="landcoverMinorRoadAQ", flags=c("overwrite"))
 execGRASS('g.region', res='2')
-execGRASS("v.to.rast", input="landcoverMinorRoadBDTQ", use="val", value=minorRoadCode, output="landcoverMinorRoadBDTQRas_2m", flags=c("overwrite"))
+execGRASS("v.to.rast", input="landcoverMinorRoadAQ", use="val", value=minorRoadCode, output="landcoverMinorRoadAQRas_2m", flags=c("overwrite"))
 execGRASS('g.region', res=paste0(myResolution))
-execGRASS('r.resamp.stats', input="landcoverMinorRoadBDTQRas_2m", output=paste0("landcoverMinorRoadBDTQRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
+execGRASS('r.resamp.stats', input="landcoverMinorRoadAQRas_2m", output=paste0("landcoverMinorRoadAQRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
 # Major
-roadMajorDetailedClasses <- roadReclassBDTQ$SQL_DESCRIPTIO[roadReclassBDTQ$Code == majorRoadCode]
+roadMajorDetailedClasses <- roadReclassAQ$SQL_DESCRIPTIO[roadReclassAQ$Code == majorRoadCode]
 whereString = paste0("DESCRIPTIO IN ('",paste(roadMajorDetailedClasses, collapse="','"),"')")
-execGRASS("v.extract", input="rawDataRoad", type="line", where=whereString, output="landcoverMajorRoadBDTQ", flags=c("overwrite"))
+execGRASS("v.extract", input="rawDataRoad", type="line", where=whereString, output="landcoverMajorRoadAQ", flags=c("overwrite"))
 execGRASS('g.region', res='2')
-execGRASS("v.to.rast", input="landcoverMajorRoadBDTQ", use="val", value=majorRoadCode, output="landcoverMajorRoadBDTQRas_2m", flags=c("overwrite"))
+execGRASS("v.to.rast", input="landcoverMajorRoadAQ", use="val", value=majorRoadCode, output="landcoverMajorRoadAQRas_2m", flags=c("overwrite"))
 execGRASS('g.region', res=paste0(myResolution))
-execGRASS('r.resamp.stats', input="landcoverMajorRoadBDTQRas_2m", output=paste0("landcoverMajorRoadBDTQRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
-# All roads BDTQ
-execGRASS('r.mapcalc', expression=paste0("landcoverRoadBDTQ1 = if(isnull(landcoverMajorRoadBDTQRas_", myResolution, "m),0,landcoverMajorRoadBDTQRas_", myResolution, "m) + if(isnull(landcoverMinorRoadBDTQRas_", myResolution, "m),0,landcoverMinorRoadBDTQRas_", myResolution, "m)"), flags=c("overwrite"))
+execGRASS('r.resamp.stats', input="landcoverMajorRoadAQRas_2m", output=paste0("landcoverMajorRoadAQRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
+# All roads AQ
+execGRASS('r.mapcalc', expression=paste0("landcoverRoadAQ1 = if(isnull(landcoverMajorRoadAQRas_", myResolution, "m),0,landcoverMajorRoadAQRas_", myResolution, "m) + if(isnull(landcoverMinorRoadAQRas_", myResolution, "m),0,landcoverMinorRoadAQRas_", myResolution, "m)"), flags=c("overwrite"))
 write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='landcoverRoadBDTQ1', output='landcoverRoadBDTQ', rules='rule.txt', flags=c('overwrite'))
+execGRASS('r.reclass', input='landcoverRoadAQ1', output='landcoverRoadAQ', rules='rule.txt', flags=c('overwrite'))
 
-# Combine all roads into a sinlge layer
+# Combine all roads into a single layer
 # NB: assume the PASL roads are correct and then add the BDTQ roads to them
 execGRASS('r.mapcalc', expression='landcoverRoad = if(landcoverRoadPASL>0,landcoverRoadPASL,landcoverRoadBDTQ)', flags=c("overwrite"))
 execGRASS('r.null', map='landcoverRoad', setnull='0')
@@ -179,7 +179,7 @@ execGRASS('r.patch', input='landcoverRoad,landcoverBTSL2', output='landcoverBTSL
 # Landcover Buffer #
 ####################
 # Reclassify landcover in buffer to match Albert et al. classes
-rcl<-read.csv(paste0(rawTablesDir, "landcoverBufferReclass.csv"),header=TRUE)[,c('Value','Code')]
+rclBuffer<-read.csv(file.path(rawTablesDir, "landcoverBufferReclass.csv"),header=TRUE)[,c('Value','Code')]
 write.table(paste0(rcl[,'Value'],'=',rcl[,'Code']),'rule.txt',sep="",col.names=FALSE,quote=FALSE,row.names=FALSE)
 execGRASS('r.reclass',input='rawDataLandcoverBuffer',output='landcoverBuffer' ,rules='rule.txt',flags=c('overwrite'))
 
