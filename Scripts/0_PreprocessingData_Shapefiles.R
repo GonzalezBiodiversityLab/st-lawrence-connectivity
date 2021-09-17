@@ -73,7 +73,7 @@ if(doGRASSSetup){
 }
 
 # Set the geographic region
-execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930')
+execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930') # This data should already be set when running line 53
 
 # check your geographic location
 execGRASS("g.region", flags = "p") # only included in the working file, to be removed later
@@ -94,13 +94,13 @@ execGRASS('r.reclass', input='rawDataForestAge', output='forestAge', rules=file.
 # Surficial deposit - reclassify
 rclDeposit<-read.csv(file.path(rawTablesDir, "depositReclass.csv"),header=TRUE)[,c('Value','Recode')]
 write.table(rclDeposit, file="../Inputs/RawData/Tables/depositRules.txt", sep="=", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='rawDataSurficialDeposits', output='deposit', rules=file.path(rawTablesDir, "depositRules.txt"), flags=c('overwrite'))
+execGRASS('r.reclass', input='rawDataSurficialDeposits', output='surficialDeposit', rules=file.path(rawTablesDir, "depositRules.txt"), flags=c('overwrite'))
 
 # Landcover BTSL---------------------------------------------------------------------------------------------
 # Reclass tables
 speciesLandcoverReclass <- read.csv(file.path(rawTablesDir, "speciesLandcoverReclass.csv"), header=TRUE)
-landcoverReclassRaw <- read.csv(file.path(rawTablesDir, "landcoverBTSLReclass.csv"), header=TRUE)
-roadReclassBDTQ <- read.csv(file.path(rawTablesDir, "roadReclassBDTQ.csv"), header=TRUE)
+landcoverReclassRaw <- read.csv(file.path(rawTablesDir, "landcoverBTSLReclass.csv"), encoding = "UTF-8", header=TRUE)
+roadReclassBDTQ <- read.csv(file.path(rawTablesDir, "roadReclassBDTQ.csv"), encoding = "UTF-8", header=TRUE)
 
 # Reclassify landcover in BTSL to match Albert et al. classes
 landcoverReclass<-landcoverReclassRaw[, c("Value", "Code")]
