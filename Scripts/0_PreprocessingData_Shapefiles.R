@@ -103,15 +103,14 @@ landcoverReclassRaw <- read.csv(file.path(rawTablesDir, "landcoverBTSLReclass.cs
 roadReclassBDTQ <- read.csv(file.path(rawTablesDir, "roadReclassBDTQ.csv"), encoding = "UTF-8", header=TRUE)
 
 # Reclassify landcover in BTSL to match Albert et al. classes
-landcoverReclass<-landcoverReclassRaw[, c("Value", "Code")]
+landcoverReclass<-landcoverReclassRaw[, c("X.U.FEFF.Value", "Code")]
 write.table(landcoverReclass, file="../Inputs/RawData/Tables/landReclassRule.txt", sep="=", col.names=FALSE, quote=FALSE, row.names=FALSE)
 execGRASS('r.reclass', input='rawDataLandcoverBTSL', output='landcoverBTSLReclass', rules=file.path(rawTablesDir, "landReclassRule.txt"), flags=c('overwrite'))
 
 # Fix broken linear features by extracting them, rasterizing them at higher resolution, and then reimposing them on the landcover raster
 # Extract linear agriculture (i.e. "Milieu agricole non cultivé")
-# Note that characters with accents are not retained in the attribute table therefore use "Milieu agricole non cultivÃ©"
 agLinearCode <- speciesLandcoverReclass$LandcoverCode[speciesLandcoverReclass$LandcoverName == "AgricultureLinearElements"]
-agLinearDetailedClasses <- landcoverReclass$SQL_CLASSE_DET[landcoverReclass$Code == agLinearCode]
+agLinearDetailedClasses <- landcoverReclassRaw$CLASSE_DET[landcoverReclass$Code == agLinearCode]
 whereString = paste0("CLASSE_DET IN ('",paste(agLinearDetailedClasses, collapse="','"),"')")
 execGRASS("v.extract", input="rawDataLandcoverBTSLPoly", layer='1', type="area", where=whereString, output="landcoverAgLinearPoly", flags=c("overwrite"))
 execGRASS('g.region', res='2')
