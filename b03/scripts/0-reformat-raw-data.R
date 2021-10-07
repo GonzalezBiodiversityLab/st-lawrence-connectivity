@@ -15,8 +15,8 @@ library(tidyverse)
 
 # Set up directories
 # Assumes these directories already exist
-rawMapsDir <- "../Data/Spatial"
-rawTablesDir <- "../Inputs/RawData/Tables"
+rawMapsDir <- "../data/spatial"
+rawTablesDir <- "../../b01b02/inputs/rawData/tables"
 
 # Read in data
 # Spatial
