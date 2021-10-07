@@ -1,7 +1,7 @@
 # a254
 Scripts associated with a254 - Outaouais Connectivity Analysis
 
-This repo is organized under the following folder structure:<br />
-b01b02: includes files/maps which correspond to Phase 3 of the Connectivity Analysis<br />
-b03: includes files/maps which correspond to the Outaouais extent of the Connectivity Analysis<br />
-combined: includes files/maps which correspond to the entire BTSL ecoregion
+The folders in this repo are organized in reference to specific phases within the BTSL connectivity analysis:<br />
+**b01b02**: Phase 2 (Conservation prioritization of natural habitats in the St. Lawrence Lowlands based on their importance for ecological connectivity), Phase 3 (Changing terrestrial habitat connectivity within the St. Lawrence Lowlands under scenarios of climate and landcover change). More info can be read about the b01b02 analysis in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
+**b03**: Phase 4 (Outaouais extent of the Connectivity Analysis).<br />
+**combined**: includes files/maps which correspond to the entire BTSL ecoregion.<br />
