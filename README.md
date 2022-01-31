@@ -1,7 +1,7 @@
 # a254
 Scripts associated with a254 - Plaine d'Ottawa Connectivity Analysis
 
-The latest versions of reports covering this work can be read in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
+Descriptions of the methodology are available in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
 
 The folders in this repo are organized in reference to specific phases within the St. Lawrence Lowlands connectivity analysis:<br />
 **phase2**: Conservation prioritization of natural habitats in the St. Lawrence Lowlands based on their importance for ecological connectivity<br />
