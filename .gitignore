@@ -40,9 +40,16 @@ vignettes/*.pdf
 
 # Folders to be ignored
 **/b03/data/spatial
+**/b03/data/tabular/old
+**/b03/scripts/old
 **/b03/grass7
+**/b03/results
 **/b01b02/inputs
 **/b01b02/maps
 **/b01b02/outputs
 **/b01b02/QGISstyles
 **/combined/maps
+
+# Files to be ignored
+phase2/junk
+phase2/phase2.Rproj
