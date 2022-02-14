@@ -147,8 +147,8 @@ execGRASS('g.region', res=paste0(myResolution))
 execGRASS('r.resamp.stats', input="landcoverMajorRoadPASLRas_2m", output=paste0("landcoverMajorRoadPASLRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
 # All roads PASL
 execGRASS('r.mapcalc', expression=paste0("landcoverRoadPASL1 = if(isnull(landcoverMajorRoadPASLRas_", myResolution, "m),0,landcoverMajorRoadPASLRas_", myResolution, "m) + if(isnull(landcoverMinorRoadPASLRas_", myResolution, "m),0,landcoverMinorRoadPASLRas_", myResolution, "m)"), flags=c("overwrite"))
-write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='landcoverRoadPASL1', output='landcoverRoadPASL', rules='rule.txt', flags=c('overwrite'))
+write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), paste0(b03RawTablesDir, '/rule.txt'), sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
+execGRASS('r.reclass', input='landcoverRoadPASL1', output='landcoverRoadPASL', rules=paste0(b03RawTablesDir, '/rule.txt'), flags=c('overwrite'))
 
 # # Add roads from AQ database
 # # Minor
@@ -169,8 +169,8 @@ execGRASS('g.region', res=paste0(myResolution))
 execGRASS('r.resamp.stats', input="landcoverMajorRoadAQRas_2m", output=paste0("landcoverMajorRoadAQRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
 # All roads AQ
 execGRASS('r.mapcalc', expression=paste0("landcoverRoadAQ1 = if(isnull(landcoverMajorRoadAQRas_", myResolution, "m),0,landcoverMajorRoadAQRas_", myResolution, "m) + if(isnull(landcoverMinorRoadAQRas_", myResolution, "m),0,landcoverMinorRoadAQRas_", myResolution, "m)"), flags=c("overwrite"))
-write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), 'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='landcoverRoadAQ1', output='landcoverRoadAQ', rules='rule.txt', flags=c('overwrite'))
+write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), paste0(b03RawTablesDir, '/rule.txt'), sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
+execGRASS('r.reclass', input='landcoverRoadAQ1', output='landcoverRoadAQ', rules=paste0(b03RawTablesDir, '/rule.txt'), flags=c('overwrite'))
 
 # Combine all roads into a single layer
 # NB: assume the PASL roads are correct and then add the AQ roads to them
@@ -185,8 +185,8 @@ execGRASS('r.patch', input=paste0('landcoverRoad,landcoverBTSL', myResolution, '
 ####################
 # Reclassify landcover in buffer to match Albert et al. classes
 rclBuffer <- read.csv(file.path(b01b02RawTablesDir, "landcoverBufferReclass.csv"),header=TRUE)[,c('Value','Code')]
-write.table(paste0(rclBuffer[,'Value'],'=',rclBuffer[,'Code']),'rule.txt',sep="",col.names=FALSE,quote=FALSE,row.names=FALSE)
-execGRASS('r.reclass',input='rawDataLandcoverBuffer',output='landcoverBuffer' ,rules='rule.txt',flags=c('overwrite'))
+write.table(paste0(rclBuffer[,'Value'],'=',rclBuffer[,'Code']),paste0(b03RawTablesDir, '/rule.txt'),sep="",col.names=FALSE,quote=FALSE,row.names=FALSE)
+execGRASS('r.reclass',input='rawDataLandcoverBuffer',output='landcoverBuffer' ,rules=paste0(b03RawTablesDir, '/rule.txt'),flags=c('overwrite'))
 
 #####################################
 # Combine BTSL and Buffer landcover #
