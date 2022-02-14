@@ -1,0 +1,65 @@
+Value,Count,CODE,DESCRIPTION,ABRV_DEP_GR1,ABRV_DEP_GR1_NM,Recode
+1,13961,0,0 : Affleurements rocheux,0X,AFFROC,2
+2,80013,0A,0A : Affleurements rocheux; avec argile,0X,AFFROC,2
+3,939989,0B,0B : Affleurements rocheux; avec tourbe,0X,AFFROC,2
+4,7872655,0R,0R : Affleurements rocheux; avec autre dépôt < 20 %,0X,AFFROC,2
+5,286235,0S,0S : Affleurements rocheux; avec sable et gravier,0X,AFFROC,2
+6,27522324,0T,0T : Affleurements rocheux; avec till,0X,AFFROC,2
+282,108,3L,3L : Dépôts alluvionaires; fluviolacustres,3MX,AFM,2
+304,1548194,3M,3M : Dépôts alluvionaires; fluvio-marins,3MX,AFM,2
+220,674255,3D,3D : Dépôts alluvionaires; deltaïques marins,3DX,ALD,2
+239,1466005,3F,3F : Dépôts alluvionaires; fluviatiles,3FX,ALF,2
+240,536278,3FA,3FA : Dépôts alluvionaires; fluviatiles; actuels,3FX,ALF,2
+261,3792107,3FB,3FB : Dépôts alluvionaires; fluviatiles; anciens,3FX,ALF,2
+559,146912,8A,8A : Dépôts d'altérations et de versants; altérations,8AX,ALT,2
+560,9014285,8AAE,8AAE : Dépôts d'altérations et de versants; altérations; actuels; épais,8AX,ALT,2
+561,14787899,8AAM,8AAM : Dépôts d'altérations et de versants; altérations; actuels; minces,8AX,ALT,2
+558,35,8,8 : Dépôts d'altérations et de versants,8CX,COV,2
+617,166380,8B_E,8B_E : Dépôts d'altérations et de versants; éboulis; actuels ou anciens; épais,8CX,COV,2
+616,418,8B_M,8B_M :  Dépôts d'altérations et de versants; éboulis; actuels ou anciens; minces,8CX,COV,2
+564,31938,8BAP,8BAP : Dépôts d'altérations et de versants; éboulis; actuels; très épais,8CX,COV,2
+615,865184,8C_E,8C_E : Dépôts d'altérations et de versants; colluvions; actuels ou anciens; épais,8CX,COV,2
+614,3562533,8C_M,8C_M : 8C_E : Dépôts d'altérations et de versants; colluvions; actuels ou anciens; minces,8CX,COV,2
+581,1868,8D,8D : Dépôts d'altérations et de versants; décrochements,8CX,COV,2
+590,229552,9,9 : Dépôts éoliens,9X,EOL,2
+595,1398,9DA,9DA : Dépôts éoliens; dunes; actives,9X,EOL,2
+597,904178,9DF,9DF : Dépôts éoliens; dunes; fixées,9X,EOL,2
+194,14940538,2A,2A : Dépôts fluvioglaciaires; juxtaglaciaires,2AX,FGJ,2
+195,1343746,2AK,2AK : Dépôts fluvioglaciaires; juxtaglaciaires; esker,2AX,FGJ,2
+198,248792,2AT,2AT : Dépôts fluvioglaciaires; juxtaglaciaires; kame,2AX,FGJ,2
+193,1208,2,2 : Dépôts fluvioglaciaires,2BX,FGP,2
+201,548062,2B,2B : Dépôts fluvioglaciaires; proglaciaires,2BX,FGP,2
+202,1753526,2BD,2BD : Dépôts fluvioglaciaires; proglaciaires; delta,2BX,FGP,2
+209,19678884,2BE,2BE : Dépôts fluvioglaciaires; proglaciaires; épandage,2BX,FGP,2
+327,1410970,4A,4A : Dépôts glacio-lacustres; eau calme,4AX,GLA,2
+328,29036788,4AE,4AE : Dépôts glacio-lacustres; eau calme; épais,4AX,GLA,2
+331,42233,4AM,4AM : Dépôts glacio-lacustres; eau calme; minces,4AX,GLA,2
+340,113437,4S,4S : Dépôts glacio-lacustres; eau agitée,4SX,GLS,2
+341,6472721,4SE,4SE : Dépôts glacio-lacustres; eau agitée; épais,4SX,GLS,2
+343,2317,4SM,4SM : Dépôts glacio-lacustres; eau agitée; minces,4SX,GLS,2
+350,237,5,5 : Dépôts glacio-marins,5AX,GMA,2
+351,6293625,5A,5A : Dépôts glacio-marins; eau calme,5AX,GMA,2
+352,2895436,5AE,5AE : Dépôts glacio-marins; eau calme; épais,5AX,GMA,2
+365,1907758,5S,5S : Dépôts glacio-marins; eau agitée,5SX,GMS,2
+366,10473122,5SE,5SE : Dépôts glacio-marins; eau agitée; épais,5SX,GMS,2
+376,29459,6A,6A : Dépôts littoraux; lacustres actuels,6X,LIT,2
+419,1186,6B,6B : Dépôts littoraux; glacio-lacustres anciens,6X,LIT,2
+462,158030,6C,6C : Dépôts littoraux; marins ou estuariens actuels,6X,LIT,2
+485,105,6CHE,6CHE : Dépôts littoraux; marins ou estuariens actuels; haut de plage; épais,6X,LIT,2
+505,1179548,6D,6D : Dépôts littoraux; glacio-marins anciens,6X,LIT,2
+527,131993,6DH,6DH : Dépôts littoraux; glacio-marins anciens; haut de plage,6X,LIT,2
+528,2341390,6DHE,6DHE : Dépôts littoraux; glacio-marins anciens; haut de plage; épais,6X,LIT,2
+548,69679738,7,7 : Dépôts organiques,7X,ORG,2
+8,3116003,1A,1A : Dépôts glaciaires; moraine sans morphologie,1X,TILL,1
+16,107153,1AEV,1AEV : Dépôts glaciaires; moraine sans morphologie; épais; délavés,1X,TILL,1
+17,23889,1AEVB,1AEVB : Dépôts glaciaires; moraine sans morphologie; épais; délavés; avec blocs,1X,TILL,1
+23,155854479,1AM,1AM : Dépôts glaciaires; moraine sans morphologie; minces,1X,TILL,1
+25,2096640,1AMR,1AMR : Dépôts glaciaires; moraine sans morphologie; minces; remaniés,1X,TILL,1
+30,844,1AMV,1AMV : Dépôts glaciaires; moraine sans morphologie; minces; délavés,1X,TILL,1
+37,169314007,1AP,1AP : Dépôts glaciaires; moraine sans morphologie; très épais,1X,TILL,1
+94,1400218,1D,1D : Dépôts glaciaires; moraine drumlinoïde déposée en milieu terrestre,1X,TILL,1
+108,31816,1DM,1DM : Dépôts glaciaires; moraine drumlinoïde déposée en milieu terrestre; minces,1X,TILL,1
+134,406836,1G,1G : Dépôts glaciaires; moraine de De Geer,1X,TILL,1
+137,4821512,1H,1H : Dépôts glaciaires; moraine de décrépitude,1X,TILL,1
+140,637401,1M,1M : Dépôts glaciaires; moraine frontale,1X,TILL,1
+181,156799,1R,1R : Dépôts glaciaires; moraine de Rogen,1X,TILL,1

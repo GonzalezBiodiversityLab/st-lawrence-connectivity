@@ -1,0 +1,30 @@
+DESCRIPTIO,SQL_DESCRIPTIO,Classification,Value,Code
+Autoroute,Autoroute,Major,3,410
+Autoroute à axes fusionnés,Autoroute Ã axes fusionnÃ©s,Major,4,410
+Bretelle,Bretelle,Major,27,410
+Ecran antibruit,Ecran antibruit,Major,29,410
+Route collectrice pavée,Route collectrice pavÃ©e,Major,13,410
+Route nationale pavée,Route nationale pavÃ©e,Major,10,410
+Route régionale pavée,Route régionale pavÃ©e,Major,11,410
+Route régionale non pavée,Route régionale non pavÃ©e,Minor,12,420
+Chemin carrossable non pavé,Chemin carrossable non pavÃ©,Minor,8,420
+Chemin carrossable pavé,Chemin carrossable pavÃ©,Minor,7,420
+Chemin non carrossable,Chemin non carrossable,Minor,9,420
+Gué,GuÃ©,Minor,23,420
+Mur de soutènement,Mur de soutÃ¨nement,Minor,28,420
+Passerelle,Passerelle,Minor,25,420
+Pont,Pont,Minor,21,420
+Pont couvert,Pont couvert,Minor,22,420
+Route collectrice non pavée,Route collectrice non pavÃ©e,Minor,14,420
+Route d’accès aux ressources non pavée,Route d'acc?¿s aux ressources non pav?®e,Minor,18,420
+Route d’accès aux ressources pavée,Route d'acc?¿s aux ressources pav?®e,Minor,17,420
+Route locale non pavée,Route locale non pavÃ©e,Minor,16,420
+Route locale pavée,Route locale pavÃ©e,Minor,15,420
+Rue non pavée,Rue non pavÃ©e,Minor,6,420
+Rue pavée,Rue pavÃ©e,Minor,5,420
+Traverse,Traverse,Minor,20,420
+Tunnel,Tunnel,Minor,26,420
+Voie de communication abandonnée,Voie de communication abandonnÃ©e,Minor,2,420
+Voie de communication en construction,Voie de communication en construction,Minor,1,420
+Voie ferrée,Voie ferrÃ©e,Minor,19,420
+Pont d'étagement,"Pont d""Ã©tagement",Minor,24,420

@@ -1,0 +1,8 @@
+DrainageName,DrainageCode,MAAM,BLBR,URAM,PLCI,RASY
+Excessif,0,100,59,100,59,100
+Rapide,1,100,59,100,80,100
+Bon,2,100,80,100,100,100
+Modere,3,100,100,100,100,100
+Imparfait,4,100,100,100,80,100
+Mauvais,5,100,80,100,80,100
+Tres mauvais,6,100,59,100,59,100
