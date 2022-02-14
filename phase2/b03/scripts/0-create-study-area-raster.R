@@ -11,23 +11,23 @@ library(tidyverse)
 
 # Set up directories
 # Assumes these directories already exist
-rawMapsDir <- "../data/spatial"
-rawTablesDir <- "../data/tabular"
+rawMapsDir <- "b03/data/spatial"
+rawTablesDir <- "b03/data/tabular"
 
 # Read in data
 # Spatial
 b03Raw <- st_read(file.path(rawMapsDir,"plaine-dottawa.shp"))
-StudyExtent<-raster(file.path(rawMapsDir,"OutaouaisConnectivityExtent.tif"))
+studyExtent<-raster(file.path(rawMapsDir,"OutaouaisConnectivityExtent.tif"))
 
 # Tabular
-reclassTable <- read_csv(file.path(rawTablesDir,"b03-reclass.csv"))
+reclassTable <- read_csv(file.path(rawTablesDir,"b03-study-area-reclass.csv"))
 
 # Reformatting data---------------------------------------------------------------------------------------------
 # Rasterize the Plaine d'Ottawa shapefile
 studyArea <- fasterize(sf = st_cast(b03Raw, "POLYGON"), 
-                       raster = StudyExtent,
+                       raster = studyExtent,
                        field = "FID02") %>% 
-  mask(., mask=StudyExtent)
+  mask(., mask=studyExtent)
 
 # Reclassify
 b03_studyarea <- reclassify(studyArea, reclassTable)
@@ -35,5 +35,5 @@ b03_studyarea <- reclassify(studyArea, reclassTable)
 # Save outputs---------------------------------------------------------------------------------------------
 # B03 study area
 writeRaster(b03_studyarea, 
-            file.path(rawMapsDir, "b03-studyarea.tif"), 
+            file.path(rawMapsDir, "b03-studyArea.tif"), 
             overwrite = TRUE)
