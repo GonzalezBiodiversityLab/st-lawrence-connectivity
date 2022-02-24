@@ -31,7 +31,7 @@ b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
 b01b02RawMapsDir <- file.path(b01b02Dir, "data", "spatial")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
 b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
-b03ProcessedMapsDir <- file.path(b03Dir, "model-outputs")
+b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs")
 
 #JL
 # Raw data filenames
