@@ -16,9 +16,9 @@ library(rgrass7)
 # Input parameters
 # Resolution in meters
 # Run this once for 10m and once for 30m
-myResolution <- 10
+myResolution <- 30
 # Set up GRASS mapset for the first time
-doGRASSSetup <- T
+doGRASSSetup <- F
 
 # JL
 # Set up directories
@@ -28,25 +28,27 @@ b03Dir <- "b03"
 b01b02Dir <- "b01b02"
 gisDbase <- file.path(b03Dir, "grass7")
 b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
+b01b02RawMapsDir <- file.path(b01b02Dir, "data", "spatial")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
-b03ProcessedMapsDir <- file.path(b03Dir, "results")
 b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
+b03ProcessedMapsDir <- file.path(b03Dir, "model-outputs")
 
 #JL
 # Raw data filenames
 countyName <- "MRC_s_2021_02.shp"
-densityName <- "OutaouaisConnectivityExtent.tif"
+extentName <- "OutaouaisConnectivityExtent.tif"
 forestageName <- "SIEF-C08PEEFO-forest-age.tif"
+forestDensityName <- "SIEF-C08PEEFO-forest-density.tif"
 landcoverBTSLPolyName <- "BTSL_SLL_Occ_sol_Land_cover.shp"
 landcoverBTSLName <- "BTSL-SLL-Occ-sol-Land-cover.tif"
 landcoverBufferName <- "utilisation_territoire_2018.tif"
+landcoverBufferFillName <- "Occ_sol_2014_recl_FED_10m_aout2017.tif"
 privatelandName <- "RMN_20210608.shp"
 protectedareaName <- "AP_REG_S_20210824.shp"
 roadName <- "AQ_Routes_l_20210701.shp"
 studyareaName <- "b03-studyArea.tif"
 surficialdepositName <- "SIEF-C08PEEFO-surficial-deposits.tif"
-# No layer for drainage
-# No layer for forest density
+drainageName <- "RCL_DRAINAGE.tif"
 
 # GRASS setup---------------------------------------------------------------------------------------------
 if(doGRASSSetup){
@@ -66,12 +68,15 @@ if(doGRASSSetup){
   execGRASS("v.in.ogr", input=file.path(b03RawMapsDir, countyName), output="rawDataCounty", flags=c("overwrite", "o"))
   execGRASS("v.in.ogr", input=file.path(b03RawMapsDir, landcoverBTSLPolyName), output="rawDataLandcoverBTSLPoly", flags=c("overwrite", "o"))
   execGRASS("v.in.ogr", input=file.path(b03RawMapsDir, privatelandName), output="rawDataPrivateLand", flags=c("overwrite", "o"))
-  execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, densityName), output="rawDataExtent", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, extentName), output="rawDataExtent", flags=c("overwrite", "o"))
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, forestageName), output="rawDataForestAge", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, forestDensityName), output="rawDataForestDensity", flags=c("overwrite", "o"))
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, landcoverBTSLName), output="rawDataLandcoverBTSL", flags=c("overwrite", "o"))
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, landcoverBufferName), output="rawDataLandcoverBuffer", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(b01b02RawMapsDir, landcoverBufferFillName), output="rawDataLandcoverBufferFill", flags=c("overwrite", "o"))
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, studyareaName), output="rawDataStudyArea", flags=c("overwrite", "o"))
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, surficialdepositName), output="rawDataSurficialDeposits", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, drainageName), output="rawDataDrainage", flags=c("overwrite", "o"))
 }else{
   initGRASS(gisBase=gisBase, gisDbase=gisDbase, location=paste0('BTSL_', myResolution, 'm'), mapset="RawData", override=TRUE)
 }
@@ -110,13 +115,13 @@ roadReclassAQ <- read.csv(file.path(b03RawTablesDir, "roadReclassAQ.csv"), heade
 
 # Reclassify landcover in BTSL to match Albert et al. classes
 landcoverReclass <- landcoverReclassRaw[, c("Value", "Code")]
-write.table(landcoverReclass, file=file.path(b01b02RawTablesDir, "landReclassRuleTest.txt"), sep="=", col.names=FALSE, quote=FALSE, row.names=FALSE)
+write.table(landcoverReclass, file=file.path(b01b02RawTablesDir, "landReclassRule.txt"), sep="=", col.names=FALSE, quote=FALSE, row.names=FALSE)
 execGRASS('r.reclass', input='rawDataLandcoverBTSL', output='landcoverBTSLReclass', rules=file.path(b01b02RawTablesDir, "landReclassRule.txt"), flags=c('overwrite'))
 
 # Fix broken linear features by extracting them, rasterizing them at higher resolution, and then reimposing them on the landcover raster
 # Extract linear agriculture (i.e. "Milieu agricole non cultiv?")
 agLinearCode <- speciesLandcoverReclass$LandcoverCode[speciesLandcoverReclass$LandcoverName == "AgricultureLinearElements"]
-agLinearDetailedClasses <- landcoverReclassRaw$CLASSE_DET[landcoverReclass$Code == agLinearCode]
+agLinearDetailedClasses <- landcoverReclassRaw$SQL_CLASSE_DET[landcoverReclassRaw$Code == agLinearCode]
 whereString <- paste0("CLASSE_DET IN ('",paste(agLinearDetailedClasses, collapse="','"),"')")
 execGRASS("v.extract", input="rawDataLandcoverBTSLPoly", layer='1', type="area", where=whereString, output="landcoverAgLinearPoly", flags=c("overwrite"))
 execGRASS('g.region', res='2')
@@ -130,7 +135,7 @@ execGRASS('r.patch', input=paste0("landcoverAgLinearRas_", myResolution, "m,land
 minorRoadCode <- speciesLandcoverReclass$LandcoverCode[speciesLandcoverReclass$LandcoverName == "MinorRoads"]
 majorRoadCode <- speciesLandcoverReclass$LandcoverCode[speciesLandcoverReclass$LandcoverName == "MajorRoads"]
 # Minor
-roadMinorDetailedClasses <- landcoverReclass$SQL_CLASSE_DET[landcoverReclass$Code == minorRoadCode]
+roadMinorDetailedClasses <- landcoverReclassRaw$SQL_CLASSE_DET[landcoverReclassRaw$Code == minorRoadCode]
 whereString = paste0("CLASSE_DET IN ('",paste(roadMinorDetailedClasses, collapse="','"),"')")
 execGRASS("v.extract", input="rawDataLandcoverBTSLPoly", layer='1', type="area", where=whereString, output="landcoverMinorRoadPASLPoly", flags=c("overwrite"))
 execGRASS('g.region', res='2')
@@ -138,7 +143,7 @@ execGRASS("v.to.rast", input="landcoverMinorRoadPASLPoly", use="val", value=mino
 execGRASS('g.region', res=paste0(myResolution))
 execGRASS('r.resamp.stats', input="landcoverMinorRoadPASLRas_2m", output=paste0("landcoverMinorRoadPASLRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
 # Major
-roadMajorDetailedClasses <- landcoverReclass$SQL_CLASSE_DET[landcoverReclass$Code == majorRoadCode]
+roadMajorDetailedClasses <- landcoverReclassRaw$SQL_CLASSE_DET[landcoverReclassRaw$Code == majorRoadCode]
 whereString = paste0("CLASSE_DET IN ('",paste(roadMajorDetailedClasses, collapse="','"),"')")
 execGRASS("v.extract", input="rawDataLandcoverBTSLPoly", layer='1', type="area", where=whereString, output="landcoverMajorRoadPASLPoly", flags=c("overwrite"))
 execGRASS('g.region', res='2')
@@ -147,8 +152,8 @@ execGRASS('g.region', res=paste0(myResolution))
 execGRASS('r.resamp.stats', input="landcoverMajorRoadPASLRas_2m", output=paste0("landcoverMajorRoadPASLRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
 # All roads PASL
 execGRASS('r.mapcalc', expression=paste0("landcoverRoadPASL1 = if(isnull(landcoverMajorRoadPASLRas_", myResolution, "m),0,landcoverMajorRoadPASLRas_", myResolution, "m) + if(isnull(landcoverMinorRoadPASLRas_", myResolution, "m),0,landcoverMinorRoadPASLRas_", myResolution, "m)"), flags=c("overwrite"))
-write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), paste0(b03RawTablesDir, '/rule.txt'), sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
-execGRASS('r.reclass', input='landcoverRoadPASL1', output='landcoverRoadPASL', rules=paste0(b03RawTablesDir, '/rule.txt'), flags=c('overwrite'))
+write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), paste0(b03RawTablesDir, '/roadPASLrule.txt'), sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
+execGRASS('r.reclass', input='landcoverRoadPASL1', output='landcoverRoadPASL', rules=paste0(b03RawTablesDir, '/roadPASLrule.txt'), flags=c('overwrite'))
 
 # # Add roads from AQ database
 # # Minor
@@ -183,10 +188,18 @@ execGRASS('r.patch', input=paste0('landcoverRoad,landcoverBTSL', myResolution, '
 ####################
 # Landcover Buffer #
 ####################
+# Reclassify landcover in Quebec to match buffer classes
+rcl<-read.csv(file.path(b01b02RawTablesDir, "landcoverQuebecReclass.csv"),header=TRUE)[,c('Code','Recode')]
+write.table(paste0(rcl[,'Code'],'=',rcl[,'Recode']),file.path(b03RawTablesDir,'landCoverQuebecReclassRule.txt'),sep="",col.names=FALSE,quote=FALSE,row.names=FALSE)
+execGRASS('r.reclass',input='rawDataLandcoverBuffer',output='landcoverBufferClasseGen',rules=file.path(b03RawTablesDir,'landCoverQuebecReclassRule.txt'),flags=c('overwrite'))
+
+# Fill out buffer with Quebec landcover
+execGRASS('r.patch', input="rawDataLandcoverBufferFill,landcoverBufferClasseGen", output='landcoverBufferFilled', flags=c('overwrite'))
+
 # Reclassify landcover in buffer to match Albert et al. classes
-rclBuffer <- read.csv(file.path(b01b02RawTablesDir, "landcoverBufferReclass.csv"),header=TRUE)[,c('Value','Code')]
-write.table(paste0(rclBuffer[,'Value'],'=',rclBuffer[,'Code']),paste0(b03RawTablesDir, '/rule.txt'),sep="",col.names=FALSE,quote=FALSE,row.names=FALSE)
-execGRASS('r.reclass',input='rawDataLandcoverBuffer',output='landcoverBuffer' ,rules=paste0(b03RawTablesDir, '/rule.txt'),flags=c('overwrite'))
+rcl<-read.csv(file.path(b01b02RawTablesDir, "landcoverBufferReclass.csv"),header=TRUE)[,c('Value','Code')]
+write.table(paste0(rcl[,'Value'],'=',rcl[,'Code']),file.path(b03RawTablesDir, 'landcoverBufferReclassRule.txt'),sep="",col.names=FALSE,quote=FALSE,row.names=FALSE)
+execGRASS('r.reclass',input='landcoverBufferFilled',output='landcoverBuffer' ,rules=file.path(b03RawTablesDir, 'landcoverBufferReclassRule.txt'),flags=c('overwrite'))
 
 #####################################
 # Combine BTSL and Buffer landcover #
@@ -198,7 +211,7 @@ execGRASS('r.patch', input='landcoverBTSL,landcoverBuffer', output='landcover', 
 ############################
 execGRASS('r.out.gdal', input='landcover',output=paste0(b03ProcessedMapsDir, '/b03_landcover_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
 execGRASS('r.out.gdal', input='forestAge',output=paste0(b03ProcessedMapsDir, '/b03_forestAge_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-# execGRASS('r.out.gdal', input='rawDataForestDensity', output=paste0(b03ProcessedMapsDir, '/b03_forestDensity_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW',flags=c('overwrite'))
-# execGRASS('r.out.gdal', input='rawDataDrainage', output=paste0(b03ProcessedMapsDir, '/b03_drainage_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+execGRASS('r.out.gdal', input='rawDataForestDensity', output=paste0(b03ProcessedMapsDir, '/b03_forestDensity_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal', input='rawDataDrainage', output=paste0(b03ProcessedMapsDir, '/b03_drainage_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
 execGRASS('r.out.gdal', input='surficialDeposit', output=paste0(b03ProcessedMapsDir, '/b03_deposit_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
 execGRASS('r.out.gdal', input='rawDataStudyArea', output=paste0(b03ProcessedMapsDir, '/b03_studyArea_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
