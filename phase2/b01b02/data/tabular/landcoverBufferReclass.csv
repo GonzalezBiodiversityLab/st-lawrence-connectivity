@@ -1,0 +1,25 @@
+Value,Classe_Gen,Type,Landuse,Code
+0,Non classifie, ,Anthropique,400
+1,Zone developpee,Anthropique,Anthropique,400
+2,Route et emprise,Anthropique,Anthropique,410
+3,Culture annuelle,Agricole,Agricole,100
+4,Milieu lentique,Milieu humide et hydrique,Milieu humide et hydrique,700
+5,Milieu lotique,Milieu humide et hydrique,Milieu humide et hydrique,700
+6,Culture spécialisée,Agricole,Agricole,100
+7,Culture indefinie,Agricole,Agricole,110
+8,Eau peu profonde,Milieu humide et hydrique,Milieu humide et hydrique,700
+9,Eau profonde indefinie,Milieu humide et hydrique,Milieu humide et hydrique,700
+10,Culture perenne,Agricole,Agricole,100
+11,Friche Arbustif,Agricole,Agricole,530
+12,Graviere Sabliere,Anthropique,Anthropique,400
+13,Marais,Milieu humide et hydrique,Milieu humide et hydrique,800
+14,Milieu agricole non cultivé,Agricole,Agricole,110
+15,Peuplement feuillu,Forestier,Forestier,500
+16,Peuplement mixte,Forestier,Forestier,510
+17,Peuplement resineux,Forestier,Forestier,520
+18,Prairie humide,Milieu humide et hydrique,Milieu humide et hydrique,800
+19,Sol denude,Anthropique,Anthropique,200
+20,Tourbiere,Milieu humide et hydrique,Tourbiere_Marecage,800
+21,Marecage,Milieu humide et hydrique,Tourbiere_Marecage,810
+22,Peuplement perturbe,Forestier,Forestier,300
+23,Plantation,Agricole,Agricole,300

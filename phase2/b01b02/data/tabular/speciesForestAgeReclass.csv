@@ -1,0 +1,8 @@
+AgeName,AgeCode,MAAM,BLBR,URAM,PLCI,RASY
+Nonforest,0,100,100,100,100,100
+Jeune(<30ans),1,50,40,100,100,100
+Medium1(~50ans),2,100,80,100,100,100
+Medium2(~70ans),3,100,100,100,100,100
+Vieille(>90ans),4,100,100,100,100,100
+Inegale(Jeune+VieuxArbres),5,100,80,100,100,100
+Fallow,99,48,30,100,100,100
