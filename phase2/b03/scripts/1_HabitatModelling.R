@@ -21,19 +21,19 @@ b01b02Dir <- "b01b02"
 gisDbase <- file.path(b03Dir, "grass7")
 b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
-b03ProcessedMapsDir <- file.path(b03Dir, "results")
+b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
 b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
-habitatDir <- file.path(b03Dir, "outputs", "1.Habitat")
-resistanceDir <- file.path(b03Dir, "outputs", "2.Resistance")
-focalRegionDir <- file.path(b03Dir, "outputs", "FocalRegion")
+habitatDir <- file.path(b03Dir, "model-outputs", "1.Habitat")
+resistanceDir <- file.path(b03Dir, "model-outputs", "2.Resistance")
+focalRegionDir <- file.path(b03Dir, "model-outputs", "FocalRegion")
 
 # Data filenames
-landcoverName <- paste0("b03_landcover_", myResolution, "m.tif")
-ageName <- paste0("b03_forestAge_", myResolution, "m.tif")
-densityName <- paste0("b03_forestDensity_", myResolution, "m.tif")
-depositName <- paste0("b03_deposit_", myResolution, "m.tif")
-drainageName <- paste0("b03_drainage_", myResolution, "m.tif")
-studyAreaName <- paste0("b03_studyArea_", myResolution, "m.tif")
+landcoverName <- paste0("b03-landcover-", myResolution, "m.tif")
+ageName <- paste0("b03-forest-age-", myResolution, "m.tif")
+densityName <- paste0("b03-forest-density-", myResolution, "m.tif")
+depositName <- paste0("b03-deposit-", myResolution, "m.tif")
+drainageName <- paste0("b03-drainage-", myResolution, "m.tif")
+studyAreaName <- paste0("b03-study-area-", myResolution, "m.tif")
 
 ###############
 # GRASS setup #
@@ -343,7 +343,17 @@ for(i in 1:length(speciesList)){
 # Save resistance map at coarse resolution
 # Set the geographic region 240 m resolution
 newResolution<-240
-execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(newResolution))
+execGRASS('g.region', n='403770', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+
+for(i in 1:length(speciesList)){
+  species<-speciesList[i]
+  # Save as geotiff
+  execGRASS('r.out.gdal', input=paste0(species,'_resistance'), output=paste0(resistanceDir, "/", species,'_resistance_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+}
+
+# Set the geographic region 480 m resolution
+newResolution<-480
+execGRASS('g.region', n='404010', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
 
 for(i in 1:length(speciesList)){
   species<-speciesList[i]
