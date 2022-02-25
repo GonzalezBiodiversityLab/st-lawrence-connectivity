@@ -31,7 +31,7 @@ b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
 b01b02RawMapsDir <- file.path(b01b02Dir, "data", "spatial")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
 b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
-b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs")
+b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
 
 #JL
 # Raw data filenames
@@ -46,9 +46,10 @@ landcoverBufferFillName <- "Occ_sol_2014_recl_FED_10m_aout2017.tif"
 privatelandName <- "RMN_20210608.shp"
 protectedareaName <- "AP_REG_S_20210824.shp"
 roadName <- "AQ_Routes_l_20210701.shp"
-studyareaName <- "b03-studyArea.tif"
+# Check if correct: studyareaName <- "b03-studyarea-30m.tif"
 surficialdepositName <- "SIEF-C08PEEFO-surficial-deposits.tif"
 drainageName <- "RCL_DRAINAGE.tif"
+ontarioMaskName <- "ontario-mask.tif"
 
 # GRASS setup---------------------------------------------------------------------------------------------
 if(doGRASSSetup){
@@ -77,6 +78,7 @@ if(doGRASSSetup){
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, studyareaName), output="rawDataStudyArea", flags=c("overwrite", "o"))
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, surficialdepositName), output="rawDataSurficialDeposits", flags=c("overwrite", "o"))
   execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, drainageName), output="rawDataDrainage", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(b03RawMapsDir, ontarioMaskName), output="rawDataOntarioMask", flags=c("overwrite", "o"))
 }else{
   initGRASS(gisBase=gisBase, gisDbase=gisDbase, location=paste0('BTSL_', myResolution, 'm'), mapset="RawData", override=TRUE)
 }
@@ -172,8 +174,12 @@ execGRASS('g.region', res='2')
 execGRASS("v.to.rast", input="landcoverMajorRoadAQ", use="val", value=majorRoadCode, output="landcoverMajorRoadAQRas_2m", flags=c("overwrite"))
 execGRASS('g.region', res=paste0(myResolution))
 execGRASS('r.resamp.stats', input="landcoverMajorRoadAQRas_2m", output=paste0("landcoverMajorRoadAQRas_", myResolution, "m"), method="maximum", flags=c("overwrite"))
+execGRASS('r.mask', raster="rawDataOntarioMask",flags=c("i","overwrite"))
+execGRASS('r.mapcalc', expression=paste0("landcoverMajorRoadAQRasClip_", myResolution, "m = landcoverMajorRoadAQRas_", myResolution, "m * 1"), flags=c("overwrite"))
+execGRASS('r.mask', raster="rawDataOntarioMask",flags=c("r"))
+
 # All roads AQ
-execGRASS('r.mapcalc', expression=paste0("landcoverRoadAQ1 = if(isnull(landcoverMajorRoadAQRas_", myResolution, "m),0,landcoverMajorRoadAQRas_", myResolution, "m) + if(isnull(landcoverMinorRoadAQRas_", myResolution, "m),0,landcoverMinorRoadAQRas_", myResolution, "m)"), flags=c("overwrite"))
+execGRASS('r.mapcalc', expression=paste0("landcoverRoadAQ1 = if(isnull(landcoverMajorRoadAQRasClip_", myResolution, "m),0,landcoverMajorRoadAQRasClip_", myResolution, "m) + if(isnull(landcoverMinorRoadAQRas_", myResolution, "m),0,landcoverMinorRoadAQRas_", myResolution, "m)"), flags=c("overwrite"))
 write.table(c('0=0', paste0(minorRoadCode, '=', minorRoadCode), paste0(majorRoadCode, '=', majorRoadCode), paste0(minorRoadCode + majorRoadCode, '=', majorRoadCode)), paste0(b03RawTablesDir, '/rule.txt'), sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
 execGRASS('r.reclass', input='landcoverRoadAQ1', output='landcoverRoadAQ', rules=paste0(b03RawTablesDir, '/rule.txt'), flags=c('overwrite'))
 
@@ -209,9 +215,9 @@ execGRASS('r.patch', input='landcoverBTSL,landcoverBuffer', output='landcover', 
 ############################
 # Save outputs to geotiffs #
 ############################
-execGRASS('r.out.gdal', input='landcover',output=paste0(b03ProcessedMapsDir, '/b03_landcover_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-execGRASS('r.out.gdal', input='forestAge',output=paste0(b03ProcessedMapsDir, '/b03_forestAge_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-execGRASS('r.out.gdal', input='rawDataForestDensity', output=paste0(b03ProcessedMapsDir, '/b03_forestDensity_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW',flags=c('overwrite'))
-execGRASS('r.out.gdal', input='rawDataDrainage', output=paste0(b03ProcessedMapsDir, '/b03_drainage_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-execGRASS('r.out.gdal', input='surficialDeposit', output=paste0(b03ProcessedMapsDir, '/b03_deposit_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-execGRASS('r.out.gdal', input='rawDataStudyArea', output=paste0(b03ProcessedMapsDir, '/b03_studyArea_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+execGRASS('r.out.gdal', input='landcover',output=paste0(b03ProcessedMapsDir, '/b03-landcover-', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+execGRASS('r.out.gdal', input='forestAge',output=paste0(b03ProcessedMapsDir, '/b03-forest-age-', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+execGRASS('r.out.gdal', input='rawDataForestDensity', output=paste0(b03ProcessedMapsDir, '/b03-forest-density-', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal', input='rawDataDrainage', output=paste0(b03ProcessedMapsDir, '/b03-drainage-', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+execGRASS('r.out.gdal', input='surficialDeposit', output=paste0(b03ProcessedMapsDir, '/b03-deposit-', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+execGRASS('r.out.gdal', input='rawDataStudyArea', output=paste0(b03ProcessedMapsDir, '/b03-study-area-', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))

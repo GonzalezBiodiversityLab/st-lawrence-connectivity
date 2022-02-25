@@ -56,3 +56,4 @@ vignettes/*.pdf
 # Files to be ignored
 phase2/junk
 phase2/phase2.Rproj
+phase2/rule.txt
