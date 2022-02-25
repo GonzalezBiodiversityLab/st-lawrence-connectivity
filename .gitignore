@@ -19,6 +19,7 @@
 
 # RStudio files
 .Rproj.user/
+junk
 
 # produced vignettes
 vignettes/*.html
@@ -58,3 +59,6 @@ phase2/junk
 phase2/phase2.Rproj
 phase2/rule.txt
 phase2/b03/scripts/junk
+**/b03/model-inputs/spatial
+**/b03/model-outputs/
+QGISStyles
