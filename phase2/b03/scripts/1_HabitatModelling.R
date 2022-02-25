@@ -362,3 +362,27 @@ for(i in 1:length(speciesList)){
 }
 # Reset the geographic region
 execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
+
+
+# Save habitat patch map at coarse resolution
+# Set the geographic region 240 m resolution
+newResolution<-240
+execGRASS('g.region', n='403770', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+
+for(i in 1:length(speciesList)){
+  species<-speciesList[i]
+  # Save as geotiff
+  execGRASS('r.out.gdal', input=paste0(species,'_habitatLargeBinary'), output=paste0(habitatDir, "/", species,'_habitatPatch_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+}
+
+# Set the geographic region 480 m resolution
+newResolution<-480
+execGRASS('g.region', n='404010', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+
+for(i in 1:length(speciesList)){
+  species<-speciesList[i]
+  # Save as geotiff
+  execGRASS('r.out.gdal', input=paste0(species,'_habitatLargeBinary'), output=paste0(habitatDir, "/", species,'_habitatPatch_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+}
+# Reset the geographic region
+execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
