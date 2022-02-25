@@ -1,56 +1,86 @@
 Code,Classification détaillée,Classification selon 8 catégories,Classification A selon 27 catégories,Classification B selon 20 catégories,Recode
-120,Agriculture indifférenciée,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
-131,Jachère,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
-198,Vesce,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
-2120,Agriculture (indifférenciée)\Tourbière,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
-4120,Agriculture (indifférenciée)\Marécage,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
-300,Autres terrains,Anthropique,Anthropique,Anthropique,1
-301,Zones développées,Anthropique,Anthropique,Anthropique,1
-302,Urbain,Anthropique,Anthropique,Anthropique,1
-311,Parc/terrain sport,Anthropique,Anthropique,Anthropique,1
-313,Golf,Anthropique,Anthropique,Anthropique,1
-320,Routes et chemins,Anthropique,Anthropique,Anthropique,1
-321,Aéroport,Anthropique,Anthropique,Anthropique,1
-322,Chemin de fer,Anthropique,Anthropique,Anthropique,1
-341,Carrière et gravière,Anthropique,Anthropique,Anthropique,1
-343,Mine et déchet de mine,Anthropique,Anthropique,Anthropique,1
-344,"Bassin de filtration, de
-décontamination, Bassin
-déchets liquides, etc.",Anthropique,Anthropique,Anthropique,1
-345,Dépotoir,Anthropique,Anthropique,Anthropique,1
-346,Zone industrielle et commerce,Anthropique,Anthropique,Anthropique,1
-350,Installations de gaz et pétrole,Anthropique,Anthropique,Anthropique,1
-351,"Ligne de transmission, Ligne de transport d'énergie",Anthropique,Anthropique,Anthropique,1
-2301,Urbain\Tourbière,Anthropique,Anthropique,Anthropique,1
-2351,"Ligne de transport
-d'énergie\Tourbière",Anthropique,Anthropique,Anthropique,1
-3000,Tourbière exploitée,Anthropique,Anthropique,Anthropique,1
-4301,Urbain\Marécage,Anthropique,Anthropique,Anthropique,1
-4351,"Ligne de transport
-d'énergie\Marécage",Anthropique,Anthropique,Anthropique,1
+10,Nuages,Non classifié,Non classifié,Non classifié,0
+20,Eau,Aquatique,Eau,Eau,9
+21,Lac,Aquatique,Plan d'eau,Plan d'eau,9
+22,Mare,Aquatique,Plan d'eau,Plan d'eau,9
+23,Réservoir,Aquatique,Plan d'eau,Plan d'eau,9
+24,Cours d'eau,Aquatique,Cours d'eau,Cours d'eau,9
+25,Eau salée,Aquatique,Eau,Eau,9
+26,Eau saumâtre,Aquatique,Eau,Eau,9
+29,Neige et glace permanentes/ combe à neige,Non classifié,"Neige et glace
+permanentes/ combe à neige",Autres,0
+30,"Sol nus /roc-sol à nu, Dénudé et semi-dénudé sec","Sols nus et
+landes",Sol dénudé,Autres,19
 50,Arbustes,Forestier,Arbustaies,Arbustaies,11
 51,Arbustes bas,Forestier,Arbustaies,Arbustaies,11
 53,Arbustes hauts,Forestier,Arbustaies,Arbustaies,11
-61,Lande à mousse,"Sols nus et
-landes",Lande à mousse,Autres,19
+55,Friche,Agricole,Friche,Friche,11
 60,Lichenais,"Sols nus et
 landes",Lichenais,Autres,19
-30,"Sol nus /roc-sol à nu, Dénudé et semi-dénudé sec","Sols nus et
-landes",Sol dénudé,Autres,19
-4030,"Dénudé et semi-dénudé
-sec\Marécage","Sols nus et
-landes",Sol dénudé,Autres,19
-29,Neige et glace permanentes/ combe à neige,Non classifié,"Neige et glace
-permanentes/ combe à neige",Autres,0
+61,Lande à mousse,"Sols nus et
+landes",Lande à mousse,Autres,19
+110,Prairies,Agricole,Fourrage,Fourrage,3
+120,Agriculture indifférenciée,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
+122,Cultures pérennes et pâturages,Agricole,Fourrage,Fourrage,3
+131,Jachère,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
+132,Céréales,Agricole,Interligne étroit,Interligne étroit,3
+133,Orge,Agricole,Interligne étroit,Interligne étroit,3
+135,Millet,Agricole,Interligne étroit,Interligne étroit,3
+136,Avoine,Agricole,Interligne étroit,Interligne étroit,3
+137,Seigle,Agricole,Interligne étroit,Interligne étroit,3
+138,Épeautre,Agricole,Interligne étroit,Interligne étroit,3
+139,Triticale,Agricole,Interligne étroit,Interligne étroit,3
+140,Blé,Agricole,Interligne étroit,Interligne étroit,3
+147,Maïs,Agricole,Grand interligne,Grand interligne,3
+150,Oléagineux,Agricole,Grand interligne,Grand interligne,3
+151,Bourrache,Agricole,Grand interligne,Grand interligne,3
+152,Caméline,Agricole,Interligne étroit,Interligne étroit,3
+153,Canola/Colza,Agricole,Interligne étroit,Interligne étroit,3
+154,Graines de lin,Agricole,Interligne étroit,Interligne étroit,3
+155,Moutarde,Agricole,Interligne étroit,Interligne étroit,3
+156,Carthame,Agricole,Interligne étroit,Interligne étroit,3
+157,Tournesols,Agricole,Grand interligne,Grand interligne,3
+158,Soja,Agricole,Grand interligne,Grand interligne,3
+160,Légume à Gousse,Agricole,Grand interligne,Grand interligne,3
+162,Pois,Agricole,Grand interligne,Grand interligne,3
+167,Fèves,Agricole,Grand interligne,Grand interligne,3
+168,Laitue,Agricole,Grand interligne,Grand interligne,3
+169,Oignons,Agricole,Grand interligne,Grand interligne,3
+170,Carottes,Agricole,Grand interligne,Grand interligne,3
+171,Cucurbitacées,Agricole,Grand interligne,Grand interligne,3
+172,Crucifères,Agricole,Grand interligne,Grand interligne,3
+173,Légumes à fruits,Agricole,Grand interligne,Grand interligne,3
+174,Lentilles,Agricole,Grand interligne,Grand interligne,3
+175,Légumes,Agricole,Grand interligne,Grand interligne,3
+176,Légumes racines,Agricole,Grand interligne,Grand interligne,3
+177,Pommes de terre,Agricole,Grand interligne,Grand interligne,3
+178,Betteraves à sucre,Agricole,Grand interligne,Grand interligne,3
 179,Autres cultures,Agricole,Autres cultures,Autres cultures,10
 180,Fruits,Agricole,Autres cultures,Autres cultures,10
 181,Baies/Bleuetière,Agricole,Autres cultures,Autres cultures,10
 182,Canneberges,Agricole,Autres cultures,Autres cultures,10
 188,Vergers / Vignobles,Agricole,Autres cultures,Autres cultures,10
 190,Raisins,Agricole,Autres cultures,Autres cultures,10
+191,Houblon,Agricole,Grand interligne,Grand interligne,3
 193,Fines Herbes,Agricole,Autres cultures,Autres cultures,10
 194,Pépinière,Agricole,Autres cultures,Autres cultures,10
+195,Sarrasin,Agricole,Interligne étroit,Interligne étroit,3
+196,Alpiste des Canaries,Agricole,Interligne étroit,Interligne étroit,3
 197,Chanvre,Agricole,Autres cultures,Autres cultures,10
+198,Vesce,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
+200,Forêt (indifférenciée),Forestier,Forêt indifférenciée,Forêt,16
+210,Forêt de conifères,Forestier,Forêt de conifères,Forêt,17
+211,Forêt de conifères dense,Forestier,Forêt de conifères,Forêt,17
+213,Forêt de conifères éparse,Forestier,Forêt de conifères,Forêt,17
+215,Forêt de conifères ouverte,Forestier,Forêt de conifères,Forêt,17
+220,Forêt de feuillus,Forestier,Forêt de feuillus,Forêt,15
+221,Forêt de feuillus dense,Forestier,Forêt de feuillus,Forêt,15
+223,Forêt de feuillus éparse,Forestier,Forêt de feuillus,Forêt,15
+225,Forêt de feuillus ouverte,Forestier,Forêt de feuillus,Forêt,15
+230,Forêt mixte,Forestier,Forêt mixte,Forêt,16
+231,Forêt mixte dense,Forestier,Forêt mixte,Forêt,16
+233,Forêt mixte éparse,Forestier,Forêt mixte,Forêt,16
+235,Forêt mixte ouverte,Forestier,Forêt mixte,Forêt,16
 250,Opérations forestières,"Coupes et
 régénérations","Coupes et
 régénérations","Coupes et
@@ -71,66 +101,61 @@ régénérations",22
 régénérations","Coupes et
 régénérations","Coupes et
 régénérations",22
-24,Cours d'eau,Aquatique,Cours d'eau,Cours d'eau,9
-20,Eau,Aquatique,Eau,Eau,9
-25,Eau salée,Aquatique,Eau,Eau,9
-26,Eau saumâtre,Aquatique,Eau,Eau,9
-200,Forêt (indifférenciée),Forestier,Forêt indifférenciée,Forêt,16
-230,Forêt mixte,Forestier,Forêt mixte,Forêt,16
-231,Forêt mixte dense,Forestier,Forêt mixte,Forêt,16
-233,Forêt mixte éparse,Forestier,Forêt mixte,Forêt,16
-235,Forêt mixte ouverte,Forestier,Forêt mixte,Forêt,16
-210,Forêt de conifères,Forestier,Forêt de conifères,Forêt,17
-211,Forêt de conifères dense,Forestier,Forêt de conifères,Forêt,17
-213,Forêt de conifères éparse,Forestier,Forêt de conifères,Forêt,17
-215,Forêt de conifères ouverte,Forestier,Forêt de conifères,Forêt,17
-220,Forêt de feuillus,Forestier,Forêt de feuillus,Forêt,15
-221,Forêt de feuillus dense,Forestier,Forêt de feuillus,Forêt,15
-223,Forêt de feuillus éparse,Forestier,Forêt de feuillus,Forêt,15
-225,Forêt de feuillus ouverte,Forestier,Forêt de feuillus,Forêt,15
-110,Prairies,Agricole,Fourrage,Fourrage,3
-122,Cultures pérennes et pâturages,Agricole,Fourrage,Fourrage,3
-55,Friche,Agricole,Friche,Friche,11
-147,Maïs,Agricole,Grand interligne,Grand interligne,3
-150,Oléagineux,Agricole,Grand interligne,Grand interligne,3
-151,Bourrache,Agricole,Grand interligne,Grand interligne,3
-157,Tournesols,Agricole,Grand interligne,Grand interligne,3
-158,Soja,Agricole,Grand interligne,Grand interligne,3
-160,Légume à Gousse,Agricole,Grand interligne,Grand interligne,3
-162,Pois,Agricole,Grand interligne,Grand interligne,3
-167,Fèves,Agricole,Grand interligne,Grand interligne,3
-168,Laitue,Agricole,Grand interligne,Grand interligne,3
-169,Oignons,Agricole,Grand interligne,Grand interligne,3
-170,Carottes,Agricole,Grand interligne,Grand interligne,3
-171,Cucurbitacées,Agricole,Grand interligne,Grand interligne,3
-174,Lentilles,Agricole,Grand interligne,Grand interligne,3
-172,Crucifères,Agricole,Grand interligne,Grand interligne,3
-173,Légumes à fruits,Agricole,Grand interligne,Grand interligne,3
-175,Légumes,Agricole,Grand interligne,Grand interligne,3
-176,Légumes racines,Agricole,Grand interligne,Grand interligne,3
-177,Pommes de terre,Agricole,Grand interligne,Grand interligne,3
-178,Betteraves à sucre,Agricole,Grand interligne,Grand interligne,3
-191,Houblon,Agricole,Grand interligne,Grand interligne,3
-132,Céréales,Agricole,Interligne étroit,Interligne étroit,3
-133,Orge,Agricole,Interligne étroit,Interligne étroit,3
-135,Millet,Agricole,Interligne étroit,Interligne étroit,3
-136,Avoine,Agricole,Interligne étroit,Interligne étroit,3
-137,Seigle,Agricole,Interligne étroit,Interligne étroit,3
-138,Épeautre,Agricole,Interligne étroit,Interligne étroit,3
-139,Triticale,Agricole,Interligne étroit,Interligne étroit,3
-140,Blé,Agricole,Interligne étroit,Interligne étroit,3
-152,Caméline,Agricole,Interligne étroit,Interligne étroit,3
-153,Canola/Colza,Agricole,Interligne étroit,Interligne étroit,3
-154,Graines de lin,Agricole,Interligne étroit,Interligne étroit,3
-155,Moutarde,Agricole,Interligne étroit,Interligne étroit,3
-156,Carthame,Agricole,Interligne étroit,Interligne étroit,3
-195,Sarrasin,Agricole,Interligne étroit,Interligne étroit,3
-196,Alpiste des Canaries,Agricole,Interligne étroit,Interligne étroit,3
-5000,Marais,Humide,Marais,Marais,13
+300,Autres terrains,Anthropique,Anthropique,Anthropique,1
+301,Zones développées,Anthropique,Anthropique,Anthropique,1
+302,Urbain,Anthropique,Anthropique,Anthropique,1
+311,Parc/terrain sport,Anthropique,Anthropique,Anthropique,1
+312,Alpine ski slopes,Anthropique,Anthropique,Anthropique,1
+313,Golf,Anthropique,Anthropique,Anthropique,1
+320,Routes et chemins,Anthropique,Anthropique,Anthropique,1
+321,Aéroport,Anthropique,Anthropique,Anthropique,1
+322,Chemin de fer,Anthropique,Anthropique,Anthropique,1
+341,Carrière et gravière,Anthropique,Anthropique,Anthropique,1
+343,Mine et déchet de mine,Anthropique,Anthropique,Anthropique,1
+344,"Bassin de filtration, de
+décontamination, Bassin
+déchets liquides, etc.",Anthropique,Anthropique,Anthropique,1
+345,Dépotoir,Anthropique,Anthropique,Anthropique,1
+346,Zone industrielle et commerce,Anthropique,Anthropique,Anthropique,1
+350,Installations de gaz et pétrole,Anthropique,Anthropique,Anthropique,1
+351,"Ligne de transmission, Ligne de transport d'énergie",Anthropique,Anthropique,Anthropique,1
+999,Territoire non photo-interprété,Non classifié,Non classifié,Non classifié,0
+1000,Tourbière ouverte,Humide,Tourbière,Tourbière,21
+2000,Tourbière,Humide,Tourbière,Tourbière,21
+2050,Arbustes\Tourbière,Humide,Tourbière,Tourbière,21
+2051,Arbustes bas\Tourbière,Humide,Tourbière,Tourbière,21
+2053,Arbustes hauts\Tourbière,Humide,Tourbière,Tourbière,21
+2120,Agriculture (indifférenciée)\Tourbière,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
+2211,"Forêt de conifères
+dense\Tourbière",Humide,Tourbière forestière,Tourbière,21
+2213,"Forêt de conifères
+éparse\Tourbière",Humide,Tourbière forestière,Tourbière,21
+2215,"Forêt de conifères
+ouverte\Tourbière",Humide,Tourbière forestière,Tourbière,21
+2221,Forêt de feuillus dense\Tourbière,Humide,Tourbière forestière,Tourbière,21
+2223,Forêt de feuillus éparse\Tourbière,Humide,Tourbière forestière,Tourbière,21
+2225,"Forêt de feuillus
+ouverte\Tourbière",Humide,Tourbière forestière,Tourbière,21
+2231,Forêt mixte dense\Tourbière,Humide,Tourbière forestière,Tourbière,21
+2233,Forêt mixte éparse\Tourbière,Humide,Tourbière forestière,Tourbière,21
+2235,Forêt mixte ouverte\Tourbière,Humide,Tourbière forestière,Tourbière,21
+2250,Opérations forestières\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
+2253,Coupe forestière\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
+2255,Plantation\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
+2263,Brûlis\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
+2280,Perturbation naturelle\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
+2301,Urbain\Tourbière,Anthropique,Anthropique,Anthropique,1
+2351,"Ligne de transport
+d'énergie\Tourbière",Anthropique,Anthropique,Anthropique,1
+3000,Tourbière exploitée,Anthropique,Anthropique,Anthropique,1
 4000,Marécage,Humide,Marécage,Marécage,21
+4030,"Dénudé et semi-dénudé
+sec\Marécage","Sols nus et
+landes",Sol dénudé,Autres,19
 4050,Arbustes\Marécage,Humide,Marécage,Marécage,21
 4051,Arbustes bas\Marécage,Humide,Marécage,Marécage,21
 4053,Arbustes hauts\Marécage,Humide,Marécage,Marécage,21
+4120,Agriculture (indifférenciée)\Marécage,Agricole,Agriculture indifférenciée,Agriculture indifférenciée,7
 4211,"Forêt de conifères
 dense\Marécage",Humide,Marécage,Marécage,21
 4213,"Forêt de conifères
@@ -154,31 +179,7 @@ régénérations",Marécage perturbé,Marécage perturbé,21
 régénérations",Marécage perturbé,Marécage perturbé,21
 4280,Perturbation naturelle\Marécage,"Coupes et
 régénérations",Marécage perturbé,Marécage perturbé,21
-10,Nuages,Non classifié,Non classifié,Non classifié,0
-999,Territoire non photo-interprété,Non classifié,Non classifié,Non classifié,0
-21,Lac,Aquatique,Plan d'eau,Plan d'eau,9
-22,Mare,Aquatique,Plan d'eau,Plan d'eau,9
-23,Réservoir,Aquatique,Plan d'eau,Plan d'eau,9
-1000,Tourbière ouverte,Humide,Tourbière,Tourbière,21
-2000,Tourbière,Humide,Tourbière,Tourbière,21
-2050,Arbustes\Tourbière,Humide,Tourbière,Tourbière,21
-2051,Arbustes bas\Tourbière,Humide,Tourbière,Tourbière,21
-2053,Arbustes hauts\Tourbière,Humide,Tourbière,Tourbière,21
-2211,"Forêt de conifères
-dense\Tourbière",Humide,Tourbière forestière,Tourbière,21
-2213,"Forêt de conifères
-éparse\Tourbière",Humide,Tourbière forestière,Tourbière,21
-2215,"Forêt de conifères
-ouverte\Tourbière",Humide,Tourbière forestière,Tourbière,21
-2221,Forêt de feuillus dense\Tourbière,Humide,Tourbière forestière,Tourbière,21
-2223,Forêt de feuillus éparse\Tourbière,Humide,Tourbière forestière,Tourbière,21
-2225,"Forêt de feuillus
-ouverte\Tourbière",Humide,Tourbière forestière,Tourbière,21
-2231,Forêt mixte dense\Tourbière,Humide,Tourbière forestière,Tourbière,21
-2233,Forêt mixte éparse\Tourbière,Humide,Tourbière forestière,Tourbière,21
-2235,Forêt mixte ouverte\Tourbière,Humide,Tourbière forestière,Tourbière,21
-2250,Opérations forestières\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
-2253,Coupe forestière\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
-2255,Plantation\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
-2263,Brûlis\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
-2280,Perturbation naturelle\Tourbière,Coupes et régénérations,Tourbière forestière perturbée,Tourbière forestière perturbée,21
+4301,Urbain\Marécage,Anthropique,Anthropique,Anthropique,1
+4351,"Ligne de transport
+d'énergie\Marécage",Anthropique,Anthropique,Anthropique,1
+5000,Marais,Humide,Marais,Marais,13
