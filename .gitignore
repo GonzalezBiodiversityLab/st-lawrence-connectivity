@@ -19,6 +19,7 @@
 
 # RStudio files
 .Rproj.user/
+junk
 
 # produced vignettes
 vignettes/*.html
@@ -46,3 +47,6 @@ vignettes/*.pdf
 **/b01b02/outputs
 **/b01b02/QGISstyles
 **/combined/maps
+**/b03/model-inputs/spatial
+**/b03/model-outputs/
+QGISStyles
