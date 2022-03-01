@@ -37,6 +37,7 @@ primaryStratum
 # ncol and nrow were calulated using (xmx-xmn)/90 and (ymx-ymn)/90, respectively
 # This new raster has an area of 85,716.4275 km^2
 OutaouaisConnectivityExtent <- raster(ncol=3333, nrow=3175, xmn=-691380, xmx=-391410, ymn=117930, ymx=403680)
+OutaouaisConnectivityExtent30m <- raster(ncol=9999, nrow=9525, xmn=-691380, xmx=-391410, ymn=117930, ymx=403680)
 
 # Check your raster metadata
 OutaouaisConnectivityExtent
