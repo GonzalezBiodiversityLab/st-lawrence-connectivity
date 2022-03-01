@@ -23,9 +23,9 @@ b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
 b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
 b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
-habitatDir <- file.path(b03Dir, "model-outputs", "1.Habitat")
-resistanceDir <- file.path(b03Dir, "model-outputs", "2.Resistance")
-focalRegionDir <- file.path(b03Dir, "model-outputs", "FocalRegion")
+habitatDir <- file.path(b03Dir, "model-outputs", "spatial", "1.Habitat")
+resistanceDir <- file.path(b03Dir, "model-outputs", "spatial", "2.Resistance")
+focalRegionDir <- file.path(b03Dir, "model-outputs", "spatial", "FocalRegion")
 
 # Data filenames
 landcoverName <- paste0("b03-landcover-", myResolution, "m.tif")
@@ -33,7 +33,7 @@ ageName <- paste0("b03-forest-age-", myResolution, "m.tif")
 densityName <- paste0("b03-forest-density-", myResolution, "m.tif")
 depositName <- paste0("b03-deposit-", myResolution, "m.tif")
 drainageName <- paste0("b03-drainage-", myResolution, "m.tif")
-studyAreaName <- paste0("b03-study-area-", myResolution, "m.tif")
+studyAreaName <- paste0("b03-studyarea-", myResolution, "m.tif")
 
 ###############
 # GRASS setup #
@@ -360,6 +360,7 @@ for(i in 1:length(speciesList)){
   # Save as geotiff
   execGRASS('r.out.gdal', input=paste0(species,'_resistance'), output=paste0(resistanceDir, "/", species,'_resistance_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
 }
+
 # Reset the geographic region
 execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
 
@@ -384,5 +385,6 @@ for(i in 1:length(speciesList)){
   # Save as geotiff
   execGRASS('r.out.gdal', input=paste0(species,'_habitatLargeBinary'), output=paste0(habitatDir, "/", species,'_habitatPatch_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
 }
+
 # Reset the geographic region
 execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
