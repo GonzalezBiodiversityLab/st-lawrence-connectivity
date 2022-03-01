@@ -28,7 +28,7 @@ b03Dir <- "b03"
 b01b02Dir <- "b01b02"
 gisDbase <- file.path(b03Dir, "grass7")
 b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
-b01b02RawMapsDir <- file.path(b01b02Dir, "data", "spatial")
+b01b02RawMapsDir <- file.path(b01b02Dir, "inputs", "rawData", "maps")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
 b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
 b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
@@ -36,7 +36,7 @@ b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
 #JL
 # Raw data filenames
 countyName <- "MRC_s_2021_02.shp"
-extentName <- "OutaouaisConnectivityExtent.tif"
+extentName <- "OutaouaisConnectivityExtent-30m.tif"
 forestageName <- "SIEF-C08PEEFO-forest-age.tif"
 forestDensityName <- "SIEF-C08PEEFO-forest-density.tif"
 landcoverBTSLPolyName <- "BTSL_SLL_Occ_sol_Land_cover.shp"
@@ -46,7 +46,7 @@ landcoverBufferFillName <- "Occ_sol_2014_recl_FED_10m_aout2017.tif"
 privatelandName <- "RMN_20210608.shp"
 protectedareaName <- "AP_REG_S_20210824.shp"
 roadName <- "AQ_Routes_l_20210701.shp"
-# Check if correct: studyareaName <- "b03-studyarea-30m.tif"
+studyareaName <- "b03-studyarea-30m.tif"
 surficialdepositName <- "SIEF-C08PEEFO-surficial-deposits.tif"
 drainageName <- "RCL_DRAINAGE.tif"
 ontarioMaskName <- "ontario-mask.tif"
