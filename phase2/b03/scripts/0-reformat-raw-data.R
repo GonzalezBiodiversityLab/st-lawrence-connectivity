@@ -2,7 +2,7 @@
 # Bronwyn Rayfield and Jed Lloren, ApexRMS
 # Run with R-4.1.1
 
-# Workspace---------------------------------------------------------------------------------------------
+# Workspace ----
 # Set environment variable TZ when running on AWS EC2 instance
 Sys.setenv(TZ='GMT')
 options(stringsAsFactors=FALSE)
@@ -15,7 +15,7 @@ library(tidyverse)
 
 # Set up directories
 # Assumes these directories already exist
-resultsDir <- "b03/model-inputs"
+resultsDir <- "b03/model-inputs/spatial"
 rawMapsDir <- "b03/data/spatial"
 rawTablesDir <- "b01b02/data/tables"
 
@@ -23,8 +23,8 @@ rawTablesDir <- "b01b02/data/tables"
 # Spatial
 landcoverBTSLRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="BTSL_SLL_Occ_sol_Land_cover")
 siefDataRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="SIEF_C08PEEFO")
-OutaouaisExtent <- raster(file.path(rawMapsDir, "OutaouaisConnectivityExtent.tif"))
-studyArea <- raster(file.path(resultsDir, "b03_studyArea_30m.tif"))
+studyAreaRaw <- st_read(dsn = rawMapsDir, layer = "CR_NIV_01_S")
+outaouaisExtent <- raster(file.path(rawMapsDir, "OutaouaisConnectivityExtent-30m.tif"))
 ontarioBoundary <- st_read(dsn = file.path(rawMapsDir, "ON Provincial Border"), layer = "Province")
 
 # Tabular
@@ -33,63 +33,60 @@ forestAgeReclass <- read_csv(file.path(rawTablesDir, "forestAgeReclass.csv"))
 depositReclass <- read_csv(file.path(rawTablesDir, "depositReclass.csv"))
 forestDensityReclass <- read_csv(file.path(rawTablesDir, "speciesForestDensityReclass.csv"))
 
-# Reformatting data---------------------------------------------------------------------------------------------
+# Reformatting data ----
 # Forest age
 # Merge the layer and reclass tables
 landcoverMerge <- landcoverBTSLRaw %>%
   left_join(landcoverBTSLReclass, by = c("CLASSE_DET" = "CLASSE_DET")) # Default joins by CLASSE_GEN and CLASSE_DET
 # Rasterize, crop, and mask to study area
 landcoverBTSL <- fasterize(sf = st_cast(landcoverMerge, "MULTIPOLYGON"), 
-                       raster = studyArea, # Snap to Outaouais connectivity boundaries
+                       raster = outaouaisExtent, # Snap to Outaouais connectivity boundaries
                        field = "Value") %>% 
-  mask(., mask=studyArea)
+  mask(., mask=outaouaisExtent)
 
 # Forest age
 forestAgeMerge <- siefDataRaw %>%
   left_join(forestAgeReclass)
 
 forestAge <- fasterize(sf = st_cast(forestAgeMerge, "MULTIPOLYGON"), 
-                       raster = studyArea,
+                       raster = outaouaisExtent,
                        field = "Value") %>% 
-  mask(., mask=studyArea)
+  mask(., mask=outaouaisExtent)
     
 # Surficial deposits
 depositMerge <- siefDataRaw %>%
   left_join(depositReclass, by = c("DEP_SUR" = "CODE"))
 
 surficialDeposits <- fasterize(sf = st_cast(depositMerge, "MULTIPOLYGON"), 
-                       raster = studyArea,
+                       raster = outaouaisExtent,
                        field = "Recode") %>% 
-  mask(., mask=studyArea)
+  mask(., mask=outaouaisExtent)
 
 # Forest density
 forestDensityMerge <- siefDataRaw %>%
   left_join(forestDensityReclass, by = c("CL_DENS" = "DensityName"))
 
 forestDensity <- fasterize(sf = st_cast(forestDensityMerge, "MULTIPOLYGON"), 
-                               raster = studyArea,
+                               raster = outaouaisExtent,
                                field = "DensityCode") %>% 
-  mask(., mask=studyArea)
+  mask(., mask=outaouaisExtent)
 
 # Study area
 studyAreaRaw <- studyAreaRaw %>%
   mutate(ID_Code = c(3, 4, 1, 2))
 studyArea <- fasterize(sf = st_cast(studyAreaRaw, "MULTIPOLYGON"), 
-                               raster = OutaouaisExtent,
+                               raster = outaouaisExtent,
                                field = "ID_Code") %>% 
-  mask(., mask=OutaouaisExtent)
+  mask(., mask=outaouaisExtent)
 
 # Ontario boundary
-ontarioBoundary <- st_transform(ontarioBoundary, crs = crs(studyArea))
+ontarioBoundary <- st_transform(ontarioBoundary, crs = crs(outaouaisExtent))
 ontarioBoundaryRaster <- fasterize(sf = st_cast(ontarioBoundary, "MULTIPOLYGON"),
-                                   raster = studyArea,
+                                   raster = outaouaisExtent,
                                    field = "OBJECTID") %>% 
-  mask(., mask=studyArea)
-  
-  
-  #mask(mask = studyArea)
+  mask(., mask=outaouaisExtent)
 
-# Save outputs---------------------------------------------------------------------------------------------
+# Save outputs ----
 # Landcover
 writeRaster(landcoverBTSL, 
             file.path(rawMapsDir, "BTSL-SLL-Occ-sol-Land-cover.tif"), 
@@ -108,9 +105,8 @@ writeRaster(forestDensity,
             overwrite = TRUE)
 # Study area
 writeRaster(studyArea, 
-            file.path(rawMapsDir, "study-area.tif"), 
+            file.path(rawMapsDir, "b03-studyarea-zones-30m.tif"), 
             overwrite = TRUE)
-
 # Ontario mask
 writeRaster(ontarioBoundaryRaster, 
             file.path(rawMapsDir, "ontario-mask.tif"), 
