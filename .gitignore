@@ -49,4 +49,6 @@ vignettes/*.pdf
 **/combined/maps
 **/b03/model-inputs/spatial
 **/b03/model-outputs/
+**/b01b02/LinkagePriority
 QGISStyles
+Report
