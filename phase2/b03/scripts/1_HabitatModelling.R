@@ -1,4 +1,6 @@
 library(rgrass7)
+library(raster)
+library(tidyverse)
 
 Sys.setenv(TZ='GMT')
 options(stringsAsFactors = FALSE)
@@ -34,6 +36,13 @@ densityName <- paste0("b03-forest-density-", myResolution, "m.tif")
 depositName <- paste0("b03-deposit-", myResolution, "m.tif")
 drainageName <- paste0("b03-drainage-", myResolution, "m.tif")
 studyAreaName <- paste0("b03-studyarea-", myResolution, "m.tif")
+
+# Functions
+rescaleR <- function(x, new.min = 0, new.max = 1) {
+  x.min = suppressWarnings(min(x, na.rm=TRUE))
+  x.max = suppressWarnings(max(x, na.rm=TRUE))
+  new.min + (x - x.min) * ((new.max - new.min) / (x.max - x.min))
+}
 
 ###############
 # GRASS setup #
@@ -326,65 +335,94 @@ for(i in 1:length(speciesList)){
   execGRASS('r.out.gdal', input=paste0(species, '_habitatLargeBinary'), output=paste0(habitatDir, "/", species, '_habitatPatch_', myResolution, 'm.tif'), format='GTiff',createopt='COMPRESS=LZW', flags=c('overwrite'))
   execGRASS('r.out.gdal', input=paste0(species, '_resistance'), output=paste0(resistanceDir, "/", species, '_resistance_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
   
-  # # Save outputs as geotiff for focal corridor region
-  # # Set the geographic region for focal corridor region
-  # execGRASS('g.region', n='260040', e='-318500', w='-390500', s='179640')
-  # 
-  # # Save as geotiff
-  # execGRASS('r.out.gdal', input=paste0(species,'_habitatSuitability'), output=paste0(focalRegionDir, "/",species,'_habitatSuitabilityFocalRegion_', myResolution, 'm.tif'), format='GTiff',createopt='COMPRESS=LZW', flags=c('overwrite'))
-  # execGRASS('r.out.gdal', input=paste0(species, '_habitatLargeBinary'), output=paste0(focalRegionDir, "/",species,'_habitatPatchFocalRegion_', myResolution, 'm.tif'), format='GTiff',createopt='COMPRESS=LZW', flags=c('overwrite'))
-  # execGRASS('r.out.gdal', input=paste0(species,'_resistance'), output=paste0(focalRegionDir, "/", species, '_resistanceFocalRegion_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-  #  
-  # # Reset the geographic region
-  # execGRASS('g.region', n='403680', e='-95520', w='-491430', s='117960', res=paste0(myResolution))
-}
-
-
-# Save resistance map at coarse resolution
-# Set the geographic region 240 m resolution
-newResolution<-240
-execGRASS('g.region', n='403770', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
-
-for(i in 1:length(speciesList)){
-  species<-speciesList[i]
-  # Save as geotiff
-  execGRASS('r.out.gdal', input=paste0(species,'_resistance'), output=paste0(resistanceDir, "/", species,'_resistance_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-}
-
-# Set the geographic region 480 m resolution
-newResolution<-480
-execGRASS('g.region', n='404010', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
-
-for(i in 1:length(speciesList)){
-  species<-speciesList[i]
-  # Save as geotiff
-  execGRASS('r.out.gdal', input=paste0(species,'_resistance'), output=paste0(resistanceDir, "/", species,'_resistance_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-}
-
-# Reset the geographic region
-execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
-
-
-# Save habitat patch map at coarse resolution
-# Set the geographic region 240 m resolution
-newResolution<-240
-execGRASS('g.region', n='403770', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
-
-for(i in 1:length(speciesList)){
-  species<-speciesList[i]
-  # Save as geotiff
+  ################################################################################
+  # Save habitat patch and resistance map at coarser resolutions for full region #
+  ################################################################################
+  # 240m
+  # Set the geographic region
+  newResolution<-240
+  execGRASS('g.region', n='403770', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+  
+  # Save maps as geotiffs
+  execGRASS('r.out.gdal', input=paste0(species,'_habitatLargeBinary'), output=paste0(habitatDir, "/", species, '_habitatPatch_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  execGRASS('r.out.gdal', input=paste0(species,'_resistance'), output=paste0(resistanceDir, '/', species,'_resistance_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  
+  # 480m
+  # Set the geographic region
+  newResolution<-480
+  execGRASS('g.region', n='404010', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+  
+  # Save maps as geotiffs
   execGRASS('r.out.gdal', input=paste0(species,'_habitatLargeBinary'), output=paste0(habitatDir, "/", species,'_habitatPatch_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  execGRASS('r.out.gdal', input=paste0(species,'_resistance'), output=paste0(resistanceDir, "/", species,'_resistance_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  
+  # Reset the geographic region
+  execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
+  
+  
+  ###############################
+  # Rescale habitat suitability #
+  ###############################
+  # call habitatSuitability layers from habitatDir and apply rescale function
+  suitabilityMap_01 <- raster(paste0(habitatDir, "/", species, "_habitatSuitability_", myResolution, 'm.tif')) %>%
+    calc(., fun=rescaleR)
+  
+  # Save maps as geotiffs
+  writeRaster(suitabilityMap_01, paste0(habitatDir, "/", species, "_habitatSuitability_01_", myResolution, 'm.tif'), overwrite=TRUE)   
+  
+  # Add maps to mapset (to clip to focal region next)
+  execGRASS("r.in.gdal", input=paste0(habitatDir, "/", species, "_habitatSuitability_01_", myResolution, 'm.tif'), output=paste0(species, "_habitatSuitability_01"), flags=c("overwrite", "o"))
+  
+  #############################
+  # Clip maps to focal region # 
+  #############################
+  # 30m
+  # Apply mask of focal region
+  execGRASS('r.mask', raster="studyArea0",flags=c("overwrite"))
+  # Clip maps to mask
+  execGRASS('r.mapcalc', expression=paste0(species, "_habitatSuitability_Focal_", myResolution, "m=", species, "_habitatSuitability * 1"), flags=c("overwrite"))
+  execGRASS('r.mapcalc', expression=paste0(species, "_habitatSuitability_01_Focal_", myResolution, "m=", species, "_habitatSuitability_01 * 1"), flags=c("overwrite"))
+  execGRASS('r.mapcalc', expression=paste0(species, "_habitatPatch_Focal_", myResolution, "m=", species, "_habitatLargeBinary * 1"), flags=c("overwrite"))
+  execGRASS('r.mapcalc', expression=paste0(species, "_resistance_Focal_", myResolution, "m=", species, "_resistance * 1"), flags=c("overwrite"))
+  # Save clipped maps as geotiffs
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatSuitability_Focal_", myResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatSuitability_Focal_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatSuitability_01_Focal_", myResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatSuitability_01_Focal_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatPatch_Focal_", myResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatPatch_Focal_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  execGRASS('r.out.gdal', input=paste0(species, "_resistance_Focal_", myResolution, "m"), output=paste0(resistanceDir, '/', species, '_resistance_Focal_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  # Remove mask from mapset
+  execGRASS('r.mask', raster="studyArea0",flags=c("r"))
+  
+  # 240m
+  # Set the geographic region
+  newResolution<-240
+  execGRASS('g.region', n='403770', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+  # Apply mask of focal region
+  execGRASS('r.mask', raster="studyArea0",flags=c("overwrite"))
+  # Clip maps to mask
+  execGRASS('r.mapcalc', expression=paste0(species, "_habitatPatch_Focal_", newResolution, "m=", species, "_habitatLargeBinary * 1"), flags=c("overwrite"))
+  execGRASS('r.mapcalc', expression=paste0(species, "_resistance_Focal_", newResolution, "m=", species, "_resistance * 1"), flags=c("overwrite"))
+  # Save clipped maps as geotiffs
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatPatch_Focal_", newResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatPatch_Focal_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  execGRASS('r.out.gdal', input=paste0(species, "_resistance_Focal_", newResolution, "m"), output=paste0(resistanceDir, '/', species, '_resistance_Focal_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  # Remove mask from mapset
+  execGRASS('r.mask', raster="studyArea0",flags=c("r"))
+  
+  # 480m
+  # Set the geographic region
+  newResolution<-480
+  execGRASS('g.region', n='404010', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+  # Apply mask of focal region
+  execGRASS('r.mask', raster="studyArea0",flags=c("overwrite"))
+  # Clip maps to mask
+  execGRASS('r.mapcalc', expression=paste0(species, "_habitatPatch_Focal_", newResolution, "m=", species, "_habitatLargeBinary * 1"), flags=c("overwrite"))
+  execGRASS('r.mapcalc', expression=paste0(species, "_resistance_Focal_", newResolution, "m=", species, "_resistance * 1"), flags=c("overwrite"))
+  # Save clipped maps as geotiffs
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatPatch_Focal_", newResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatPatch_Focal_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  execGRASS('r.out.gdal', input=paste0(species, "_resistance_Focal_", newResolution, "m"), output=paste0(resistanceDir, '/', species, '_resistance_Focal_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  # Remove mask from mapset
+  execGRASS('r.mask', raster="studyArea0",flags=c("r"))
+  
+  # Reset the geographic region
+  execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
 }
 
-# Set the geographic region 480 m resolution
-newResolution<-480
-execGRASS('g.region', n='404010', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
-
-for(i in 1:length(speciesList)){
-  species<-speciesList[i]
-  # Save as geotiff
-  execGRASS('r.out.gdal', input=paste0(species,'_habitatLargeBinary'), output=paste0(habitatDir, "/", species,'_habitatPatch_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
-}
-
-# Reset the geographic region
-execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
