@@ -12,30 +12,28 @@ library(plyr)
 options(stringsAsFactors = FALSE)
 
 # Directories
-projectDir <- "c:/gitprojects/a254/phase2/b03/"
+projectDir <- "D:/A254/gitproject/phase2/b03/"
 gisBase <- "C:/Program Files/GRASS GIS 7.8"
 gisDbase <- paste0(projectDir, "grass7")
 rawTablesDir <- paste0(projectDir, "data/tabular/")
 b01b02RawTablesDir <- paste0(projectDir, "../b01b02/data/tabular/")
-processedMapsDir <- paste0(projectDir, "model-outputs/")
-habitatDir <- paste0(projectDir, "model-outputs/1.Habitat/")
-resistanceDir <- paste0(projectDir, "model-outputs/2.Resistance/")
-networkDir <- paste0(projectDir, "model-outputs/3.NetworkConnectivity/")
+processedMapsDir <- paste0(projectDir, "model-inputs/spatial/")
+habitatDir <- paste0(projectDir, "model-outputs/spatial/1.Habitat/")
+resistanceDir <- paste0(projectDir, "model-outputs/spatial/2.Resistance/")
+networkDir <- paste0(projectDir, "model-outputs/spatial/3.NetworkConnectivity/")
 RscriptDir<-paste0(projectDir,"RScripts/")
 
 # Input parameters
-# speciesList<-c("MAAM", "PLCI", "RASY", "BLBR", "URAM")
-# Run on MAAM for now
-speciesList<-c("MAAM")
+speciesList<-c("MAAM", "PLCI", "RASY", "BLBR", "URAM")
 # Run this at 30m resolution
 myResolution <- 30
 #read in table of focal species dispersal parameters
-DISP<-read.csv(paste0(b01b02RawTablesDir,"/speciesDispersalParameters.csv"),header=T)
+DISP<-read.csv(paste0(b01b02RawTablesDir,"speciesDispersalParameters.csv"),header=T)
 # Set clipping threshold
 # Patches with less than clipAreaThreshold proportion of their area within the ecological boundary will be removed
 clipAreaThreshold <- 0.8
 # Load in BTSL ecological boundary
-ecobound <- raster(paste0(processedMapsDir, "b03-study-area-30m.tif"))
+ecobound <- raster(paste0(processedMapsDir, "b03-studyarea-30m.tif"))
 # Read in scripts for connectivity analyses
 source(paste0(RscriptDir,"ECstandard.R"))
 source(paste0(RscriptDir,"ECNodeImportance_standard.R"))
