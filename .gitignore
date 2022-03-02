@@ -56,4 +56,6 @@ phase2/junk
 phase2/b03/scripts/junk
 **/b03/model-inputs/spatial
 **/b03/model-outputs/
+**/b01b02/LinkagePriority
 QGISStyles
+Report
