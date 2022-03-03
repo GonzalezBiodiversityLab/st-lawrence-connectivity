@@ -4,8 +4,7 @@
 # NB: Spatial layers were originally received as geodatabase and manually converted to shapefiles in QGIS before running code on line 32
 # NB: OutaouaisConnectivityExtent.tif was created previously to determine the Phase 4 study extent
 
-# JL
-# Workspace---------------------------------------------------------------------------------------------
+# Workspace ----
 # Set environment variable TZ when running on AWS EC2 instance
 Sys.setenv(TZ='GMT')
 options(stringsAsFactors=FALSE)
@@ -20,7 +19,6 @@ myResolution <- 30
 # Set up GRASS mapset for the first time
 doGRASSSetup <- F
 
-# JL
 # Set up directories
 # Assumes these directories already exist
 gisBase <- "C:/Program Files/GRASS GIS 7.8"
@@ -33,7 +31,6 @@ b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
 b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
 b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
 
-#JL
 # Raw data filenames
 countyName <- "MRC_s_2021_02.shp"
 extentName <- "OutaouaisConnectivityExtent-30m.tif"
@@ -51,7 +48,7 @@ surficialdepositName <- "SIEF-C08PEEFO-surficial-deposits.tif"
 drainageName <- "RCL_DRAINAGE.tif"
 ontarioMaskName <- "ontario-mask.tif"
 
-# GRASS setup---------------------------------------------------------------------------------------------
+# GRASS setup ----
 if(doGRASSSetup){
   #https://gis.stackexchange.com/questions/183032/create-a-new-grass-database-in-r-with-crs-projection
   # Manually set up empty GRASS database - see GRASSTemplate
@@ -62,7 +59,6 @@ if(doGRASSSetup){
   # Initialize new mapset inheriting projection info
   execGRASS("g.mapset", mapset = "RawData", flags="c")
   
-  # JL
   # Load layers into grass database
   execGRASS("v.in.ogr", input=file.path(b03RawMapsDir, roadName), output="rawDataRoad", flags=c("overwrite", "o"))
   execGRASS("v.in.ogr", input=file.path(b03RawMapsDir, protectedareaName), output="rawDataProtectedArea", flags=c("overwrite", "o"))
@@ -89,11 +85,10 @@ execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930') # This d
 # check your geographic location
 execGRASS("g.region", flags = "p") # only included in the working file, to be removed later
 
-# Reclassify layers---------------------------------------------------------------------------------------------
+# Reclassify layers ----
 # NB No need to reclassify forest density or drainage
 # Study area
 # Fix NA values in study area layer: i.e. 2, 3, and 4 = NULL
-# See 0-create-study-area-raster.R
 # rclStudyArea <- read.csv(file.path("b01b02", "data", "tables", "studyareaReclass.csv"), header=TRUE)[,c('Value','Code')]
 # write.table(rclStudyArea, file="b01b02/data/tables/studyareaRules.txt", sep="=", col.names=FALSE, quote=FALSE, row.names=FALSE)
 # execGRASS('r.reclass', input='rawDataStudyArea', output='b03-studyArea-test', rules=file.path("b01b02", "data", "tables", "studyareaRules.txt"), flags=c('overwrite'))
@@ -108,7 +103,7 @@ rclDeposit<-read.csv(file.path(b01b02RawTablesDir, "depositReclass.csv"),header=
 write.table(rclDeposit, file=file.path(b01b02RawTablesDir, "depositRules.txt"), sep="=", col.names=FALSE, quote=FALSE, row.names=FALSE)
 execGRASS('r.reclass', input='rawDataSurficialDeposits', output='surficialDeposit', rules=file.path(b01b02RawTablesDir, "depositRules.txt"), flags=c('overwrite'))
 
-# Landcover BTSL---------------------------------------------------------------------------------------------
+# Landcover BTSL ----
 # Reclass tables
 speciesLandcoverReclass <- read.csv(file.path(b01b02RawTablesDir, "speciesLandcoverReclass.csv"), header=TRUE)
 landcoverReclassRaw <- read.csv(file.path(b01b02RawTablesDir, "landcoverBTSLReclass.csv"), header=TRUE)
