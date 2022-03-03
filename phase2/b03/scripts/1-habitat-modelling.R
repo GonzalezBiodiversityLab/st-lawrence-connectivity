@@ -24,7 +24,7 @@ gisDbase <- file.path(b03Dir, "grass7")
 b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
 b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
-b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
+b01b02RawTablesDir <- file.path(b01b02Dir, "inputs", "rawData", "tables")
 habitatDir <- file.path(b03Dir, "model-outputs", "spatial", "1.Habitat")
 resistanceDir <- file.path(b03Dir, "model-outputs", "spatial", "2.Resistance")
 focalRegionDir <- file.path(b03Dir, "model-outputs", "spatial", "FocalRegion")
@@ -424,5 +424,121 @@ for(i in 1:length(speciesList)){
   
   # Reset the geographic region
   execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
+  
+  ########################################
+  # Filter patch sizes within focal area #
+  ########################################
+  #  - apply patch filter to size of wetland patches for RASY?
+  # if(species == 'RASY'){
+  #   # Assign patch ids to habitat layer
+  #   execGRASS('r.clump', input=paste0(species, '_habitat'), output=paste0(species, '_habitatClump'), flags=c('overwrite'))
+  #   # Calculate how much wetland is in each habitat patch
+  #   execGRASS('r.stats.zonal', base=paste0(species, '_habitatClump'), cover='wetlands', method='count', output=paste0(species, '_habitatWetlandsCount'), flags=c('overwrite'))
+  #   # Suitable habitat must have at least 3 pixels of wetland within its borders
+  #   write.table(c('0 thru 2=NULL','3 thru 1000000=1'),'rule.txt', sep="", col.names=FALSE, quote=FALSE, row.names=FALSE)
+  #   execGRASS('r.reclass', input=paste0(species, '_habitatWetlandsCount'), output=paste0(species, '_habitatWetlandInside'), rules='rule.txt', flags=c('overwrite'))
+  #   
+  #   # Identify patches below minimum area threshold
+  #   minPatchSize<-as.numeric(subset(speciesHabitatPatchParams, Species==species, select=MinPatchSize))
+  #   execGRASS('r.reclass.area', input=paste0(species, '_habitatWetlandInside'), output=paste0(species, '_habitatSmall'), value=minPatchSize-0.01, mode='lesser', flags=c('overwrite', 'd'))
+  #   
+  #   # Identify patches above minimum area threshold
+  #   execGRASS('r.reclass.area', input=paste0(species, '_habitatWetlandInside'), output=paste0(species, '_habitatLarge'), value=minPatchSize, mode='greater', flags=c('overwrite', 'd'))
+  # }
+  # else{
+  
+  # Identify patches below minimum area threshold
+  minPatchSize<-as.numeric(subset(speciesHabitatPatchParams, Species==species, select=MinPatchSize))
+  execGRASS('r.reclass.area', input=paste0(species, "_habitatPatch_Focal_", myResolution, "m"), output=paste0(species, "_habitatSmall_Focal_", myResolution, "m"), value=minPatchSize-0.01, mode='lesser', flags=c('overwrite','d'))
+  # Identify patches above minimum area threshold
+  execGRASS('r.reclass.area', input=paste0(species, "_habitatPatch_Focal_", myResolution, "m"), output=paste0(species, "_habitatLarge_Focal_", myResolution, "m"), value=minPatchSize, mode='greater', flags=c('overwrite','d'))
+
+  # Replace NAs with 0's to make a binary habitat layer
+  execGRASS('r.mapcalc', expression=paste0(species, '_habitatPatch_Focal_Filtered_', myResolution, 'm=if(isnull(', species, '_habitatLarge_Focal_', myResolution,'m),0,',species, '_habitatLarge_Focal_', myResolution, 'm)'), flags=c('overwrite'))
+  
+  # Save maps as geotiffs
+  # Apply mask of focal region
+  execGRASS('r.mask', raster="studyArea0",flags=c("overwrite"))
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatPatch_Focal_Filtered_", myResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatPatch_Focal_Filtered_', myResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  # Remove mask from mapset
+  execGRASS('r.mask', raster="studyArea0",flags=c("r"))
+  
+  # Save filtered habitat patch at coarser resolutions 
+  # 240m
+  # Set the geographic region
+  newResolution<-240
+  execGRASS('g.region', n='403770', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+  # Apply mask of focal region
+  execGRASS('r.mask', raster="studyArea0",flags=c("overwrite"))
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatPatch_Focal_Filtered_", myResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatPatch_Focal_Filtered_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  # Remove mask from mapset
+  execGRASS('r.mask', raster="studyArea0",flags=c("r"))
+  
+  # 480m
+  # Set the geographic region
+  newResolution<-480
+  execGRASS('g.region', n='404010', e='-391380', w='-691380', s='117930', res=paste0(newResolution))
+  # Apply mask of focal region
+  execGRASS('r.mask', raster="studyArea0",flags=c("overwrite"))
+  execGRASS('r.out.gdal', input=paste0(species, "_habitatPatch_Focal_Filtered_", myResolution, "m"), output=paste0(habitatDir, '/', species, '_habitatPatch_Focal_Filtered_', newResolution, 'm.tif'), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+  # Remove mask from mapset
+  execGRASS('r.mask', raster="studyArea0",flags=c("r"))
+  
+  # Reset the geographic region
+  execGRASS('g.region', n='403680', e='-391410', w='-691380', s='117930', res=paste0(myResolution))
 }
 
+#############################################
+# Generate habitat patch summary statistics #
+#############################################
+# Get the total area of the study region
+studyareaRaster <- raster(file.path(b03ProcessedMapsDir, studyAreaName))
+
+focalCount <- freq(studyareaRaster) %>% 
+              as_tibble %>% 
+              filter(value == 1) %>% 
+              pull(count)
+
+focalArea <- focalCount * 0.09
+
+# Calculate patch statistics and summarize in a table
+patchSummaryStatistics <- map_dfr(speciesList,
+~{ 
+  # Get habitat patch and suitability maps
+  habitatPatchRaster <- raster(paste0(habitatDir, '/', .x, '_habitatPatch_Focal_Filtered_', myResolution, 'm.tif'))
+  habitatSuitabilityRaster <- raster(paste0(habitatDir, '/', .x, "_habitatSuitability_Focal_", myResolution, 'm.tif'))
+  
+  # Calculate total patch area
+  patchCount <- freq(habitatPatchRaster)
+  patchArea <- patchCount[[2,2]] * 0.09
+  
+  # Calculate percent of suitable habitat
+  percentSuitableHabitat <- (patchArea / focalArea) * 100
+  
+  # Calculate the number of unique patches
+  patchIds <- clump(habitatPatchRaster)
+  numPatches <- length(unique(patchIds))
+  
+  # Calculate the mean patch area
+  meanPatchArea <- patchArea / numPatches
+  
+  # Calculate the mean habitat quality in patches
+  meanHabitatQuality <- zonal(x = habitatSuitabilityRaster,
+                              z = habitatPatchRaster,
+                              fun = 'mean') %>%
+                        as_tibble %>% 
+                        filter(zone == 1) %>% 
+                        pull(mean)
+  
+  output <- tibble(
+    Species = .x,
+    'Suitable Habitat (%)' = percentSuitableHabitat,
+    'Total Habitat Patch Area (Ha)' = patchArea,
+    'Number of Habitat Patches' = numPatches,
+    'Mean Habitat Patch Area (Ha)' = meanPatchArea,
+    'Mean Habitat Quality' = meanHabitatQuality
+  )
+})
+
+# Save tabular summary to disk
+write_csv(patchSummaryStatistics, file.path(b03Dir, "model-outputs", "tabular", "patch-summary-statistics-focal-30m.csv"))
