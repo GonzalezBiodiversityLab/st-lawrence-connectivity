@@ -32,7 +32,7 @@ b03Studyarea <- fasterize(sf = st_cast(plaineDottawa, "POLYGON"),
 # Reclassify
 b03Studyarea <- reclassify(b03Studyarea, reclassTable)
 
-# Save outputs---------------------------------------------------------------------------------------------
+# Save outputs ----
 # B03 study area
 writeRaster(b03Studyarea, 
             file.path(rawMapsDir, "b03-studyarea-30m.tif"), 
