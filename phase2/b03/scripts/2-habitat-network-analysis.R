@@ -1,9 +1,6 @@
 Sys.setenv(TZ='GMT')
 
 library(raster)
-#install.packages("devtools")
-#library("devtools")
-#install_github("achubaty/grainscape")
 library(grainscape)
 library(foreign)
 library(igraph)
@@ -200,7 +197,7 @@ write.csv(mpgAnalysisTime,paste0(networkDir,"AllSpeciesmpgAnalysisTime.csv"),row
     ############################
     # If this section is being run after the previous sections then set up output tables and load in the necessary files from disk
 for(i in 4:5){#1:length(speciesList)){
-    species <- speciesList[i]
+  species <- speciesList[i]
 
   #species-specific estimates of gap-crossing and natal median dispersal distances
   d50GAP<-DISP$Gap[DISP$Species == species]
@@ -419,7 +416,7 @@ for(i in 4:5){#1:length(speciesList)){
 #     #populate table tracking time for each species
 #     mpgAnalysisTime[i,"dECSeconds"]<-elapsed_time[3]
 #   }
-# }
+}
 
 mpgAnalysisTime$extractMinutes<-mpgAnalysisTime$extractSeconds/60
 mpgAnalysisTime$clipMinutes<-mpgAnalysisTime$clipSeconds/60
