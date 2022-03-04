@@ -1,0 +1,11 @@
+ClsRte,ClsRte_SQL,Classification,Certainty,Code
+Artère ,ArtÃ¨re,Major,Low,410
+Collectrice municipale,Collectrice municipale,Major,Low,410
+Autoroute,Autoroute,Major,High,410
+Collectrice de transit,Collectrice de transit,Major,Low,410
+Nationale,Nationale,Major,High,410
+Régionale ,RÃ©gionale,Major,High,410
+Locale,Locale,Minor,High,420
+Accès aux ressources,AccÃ¨s aux ressources,Minor,Low,420
+Accès aux ressources et aux localités isolées,AccÃ¨s aux ressources et aux localitÃ©s isolÃ©es,Minor,Low,420
+Liaison maritime,Liaison maritime,Minor,Low,420
