@@ -1,0 +1,17 @@
+LandcoverName,LandcoverCode,MAAM,BLBR,URAM,PLCI,RASY
+Agriculture,100,44,44,50,44,40
+AgricultureLinearElements,110,44,44,50,44,40
+BuiltNonUrban,200,10,44,0,44,40
+DisturbedAreas1,300,44,80,70,50,40
+Urban,400,10,15,0,15,15
+MajorRoads,410,0,0,0,0,0
+MinorRoads,420,0,0,0,0,0
+ForestDeciduous,500,35,100,100,100,100
+ForestMixed,510,100,90,80,90,100
+ForestConiferous,520,100,40,60,40,100
+Fallow,530,48,30,70,30,100
+FallowLinearElements,540,0,30,0,30,100
+DisturbedAreas2,600,44,50,59,50,40
+Water,700,5,10,50,10,40
+WetlandsOpen,800,44,50,70,44,90
+WetlandsTreed,810,44,50,70,44,100

@@ -1,0 +1,6 @@
+Species,SuitabilityThreshold,MinPatchSize,Gap
+BLBR,60,1,0
+MAAM,60,150,120
+PLCI,60,3,0
+RASY,60,0.5,0
+URAM,60,1200,60
