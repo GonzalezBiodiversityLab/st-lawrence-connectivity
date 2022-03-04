@@ -2,18 +2,10 @@
 # Bronwyn Rayfield and Jed Lloren, ApexRMS
 # Run with R-1.1
 
-# Workspace ----
-# Load packages
-library(fasterize)
-library(raster)
-library(sf)
-library(tidyverse)
+# Load constants, functions, etc
+source("./b03/scripts/0-0-constants.R")
 
-# Set up directories
-# Assumes these directories already exist
-rawMapsDir <- "b03/data/spatial"
-# rawMaps2Dir <- "../../combined/maps/protected-areas"
-rawTablesDir <- "b01b02/data/tables"
+# Workspace ----
 
 # Read in data
 # Spatial

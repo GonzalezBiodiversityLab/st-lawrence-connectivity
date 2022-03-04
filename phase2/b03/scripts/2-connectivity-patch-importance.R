@@ -17,34 +17,19 @@
 # Script by B Rayfield for ApexRMS 									
 #####################################################################
 
+# Load constants, functions, etc
+source("./b03/scripts/0-0-constants.R")
+
 ## Workspace ---------------------------------------------------------
 
 # Packages
 library(Makurhini)
-library(tidyverse)
-library(raster)
-library(sf)
-
-# Directories
-b03Dir <- "b03"
-b01b02Dir <- "b01b02"
-habitatDir <- file.path(b03Dir, "model-outputs", "spatial", "1.Habitat")
-resistanceDir <- file.path(b03Dir, "model-outputs", "spatial", "2.Resistance")
-b01b02RawTablesDir <- file.path(b01b02Dir, "inputs", "rawData", "tables")
-b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
-b03PatchImportanceDir <- file.path(b03Dir, "model-outputs", "spatial", "4.PatchImportance")
 
 # Spatial data
 studyArea <- focalArea <- st_read(file.path(b03ProcessedMapsDir, "b03-studyarea.shp")) # Study area polygon
 
 # Tabular data
 dispersalDistance <- read_csv(file.path(b01b02RawTablesDir, "speciesDispersalParameters.csv"))
-
-# Run settings
-species <- "URAM"
-myResolution <- 30
-dispersalMode <- "Natal" # "Gap" # 
-
 
 ## Calculate patch importance for focal species -----------------------------------------
 
@@ -107,22 +92,22 @@ dispersalMode <- "Natal" # "Gap" #
   ## Save single-band geotiffs ---------------------------------------------
   # dPC
   writeRaster(PCfocal[[2]], 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCintra
   writeRaster(PCfocal[[3]], 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_Intra_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCflux
   writeRaster(PCfocal[[4]], 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_Flux_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCconnector
   writeRaster(PCfocal[[5]], 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_Connector_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  		
   
@@ -157,22 +142,22 @@ dispersalMode <- "Natal" # "Gap" #
   ## Save transformed geotiffs
   # dPC
   writeRaster(pc, 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_0-1_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCintra
   writeRaster(intra, 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_Intra_0-1_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCflux
   writeRaster(flux, 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_Flux_0-1_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCconnector
   writeRaster(connector, 
-              file.path(b03PatchImportanceDir, 
+              file.path(b03patchImportanceDir, 
                         paste0(species, "_PC_Connector_log&0-1_", dispersalMode, "_", myResolution, "m.tif")), 
               overwrite=TRUE)  		
 #}

@@ -2,30 +2,18 @@
 # Bronwyn Rayfield and Jed Lloren, ApexRMS
 # Run with R-4.1.1
 
+# Load constants, functions, etc
+source("./b03/scripts/0-0-constants.R")
+
 # Workspace ----
-# Set environment variable TZ when running on AWS EC2 instance
-Sys.setenv(TZ='GMT')
-options(stringsAsFactors=FALSE)
-
-# Load packages
-library(fasterize)
-library(raster)
-library(sf)
-library(tidyverse)
-
-# Set up directories
-# Assumes these directories already exist
-resultsDir <- "b03/model-inputs/spatial"
-rawMapsDir <- "b03/data/spatial"
-rawTablesDir <- "b01b02/data/tables"
 
 # Read in data
 # Spatial
 landcoverBTSLRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="BTSL_SLL_Occ_sol_Land_cover")
 siefDataRaw <- st_read(dsn = file.path(rawMapsDir, "Extrait_Donnees.gdb"), layer="SIEF_C08PEEFO")
 studyAreaRaw <- st_read(dsn = rawMapsDir, layer = "CR_NIV_01_S")
-outaouaisExtent <- raster(file.path(rawMapsDir, "OutaouaisConnectivityExtent-30m.tif"))
 ontarioBoundary <- st_read(dsn = file.path(rawMapsDir, "ON Provincial Border"), layer = "Province")
+outaouaisExtent <- raster(file.path(rawMapsDir, "OutaouaisConnectivityExtent-30m.tif"))
 
 # Tabular
 landcoverBTSLReclass <- read_csv(file.path(rawTablesDir, "landcoverBTSLReclass.csv"))

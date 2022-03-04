@@ -10,28 +10,10 @@
 # - Produces a vector layer of selected protected areas from the AP and RMN datasets                                       #
 ############################################################################################################################
 
+# Load constants, functions, etc
+source("./b03/scripts/0-0-constants.R")
+
 #### Workspace ####
-# Packages
-library(rgrass7)
-library(tidyverse)
-
-# Settings
-Sys.setenv(TZ='GMT')
-options(stringsAsFactors=FALSE)
-
-# Directories
-gisBase <- "C:/Program Files/GRASS GIS 7.8"
-b03Dir <- "b03"
-b01b02Dir <- "b01b02"
-gisDbase <- file.path(b03Dir, "grass7")
-b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
-b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
-b03ProcessedTabularDir <- file.path(b03Dir, "model-inputs", "tabular")
-
-# Input parameters
-waterThreshold <- 50 # Minimum percentage of the protected area that must fall in water for the area to be considered "aquatic" (and therefore removed from consideration)
-bufferThreshold <- 900 # Protected areas must be at least this size (in ha) to be retained within the buffer
-studyAreaThreshold <- 150 # Protected areas must be at least this size (in ha) to be retained within the study area
 
 # Spatial data - Names
       # Study Area
@@ -44,20 +26,6 @@ RMN_Name <- file.path(b03RawMapsDir, "RMN_20210608.shp")
 
       # Land cover
 landCover_Name <- file.path(b03ProcessedMapsDir, "b03-landcover-30m.tif")
-
-# Function - Get GRASS vector attribute table
-v.get.att <- function(vector_name, sep){
-  # Get attributes
-  att <- execGRASS("v.db.select", map=vector_name, separator=sep, intern=T)
-  
-  # Format as dataframe
-  tc <- textConnection(att)
-  df <- read.table(tc, header = TRUE, sep=sep)
-  close(tc)
-  
-  # Return resulting dataframe
-  return(df)
-}
 
 #### Set up GRASS Mapset #####
 # If mapset has already been created

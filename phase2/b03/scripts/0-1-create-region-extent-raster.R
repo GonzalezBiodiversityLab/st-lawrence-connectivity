@@ -9,10 +9,8 @@
 # Script created by Jed Lloren with input from Bronwyn Rayfield for ApexRMS                                  
 #####################################################################################################
 
-# Packages
-library(raster)
-library(rgdal)
-library(sp)
+# Load constants, functions, etc
+source("./b03/scripts/0-0-constants.R")
 
 # Create a new raster named OutaouaisConnectivityExtent
 # ncol and nrow were calulated using (xmx-xmn)/90 and (ymx-ymn)/90, respectively

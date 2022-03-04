@@ -4,32 +4,10 @@
 # NB: Spatial layers were originally received as geodatabase and manually converted to shapefiles in QGIS before running code on line 32
 # NB: OutaouaisConnectivityExtent.tif was created previously to determine the Phase 4 study extent
 
+# Load constants, functions, etc
+source("./b03/scripts/0-0-constants.R")
+
 # Workspace ----
-# Set environment variable TZ when running on AWS EC2 instance
-Sys.setenv(TZ='GMT')
-options(stringsAsFactors=FALSE)
-
-# Load packages
-library(rgrass7)
-
-# Input parameters
-# Resolution in meters
-# Run this once for 10m and once for 30m
-myResolution <- 30
-# Set up GRASS mapset for the first time
-doGRASSSetup <- F
-
-# Set up directories
-# Assumes these directories already exist
-gisBase <- "C:/Program Files/GRASS GIS 7.8"
-b03Dir <- "b03"
-b01b02Dir <- "b01b02"
-gisDbase <- file.path(b03Dir, "grass7")
-b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
-b01b02RawMapsDir <- file.path(b01b02Dir, "inputs", "rawData", "maps")
-b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
-b01b02RawTablesDir <- file.path(b01b02Dir, "data", "tables")
-b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
 
 # Raw data filenames
 countyName <- "MRC_s_2021_02.shp"
