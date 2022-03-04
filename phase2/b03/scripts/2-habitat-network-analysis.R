@@ -1,34 +1,15 @@
-Sys.setenv(TZ='GMT')
+# a254
+# Bronwyn Rayfield, ApexRMS
 
-library(raster)
+# Load constants, functions, etc
+source("./b03/scripts/0-0-constants.R")
+
+# Workspace ----
 library(grainscape)
-library(foreign)
 library(igraph)
-library(plyr)
 
-options(stringsAsFactors = FALSE)
-
-# Directories
-projectDir <- "D:/A254/gitproject/phase2/b03/"
-gisBase <- "C:/Program Files/GRASS GIS 7.8"
-gisDbase <- paste0(projectDir, "grass7")
-rawTablesDir <- paste0(projectDir, "data/tabular/")
-b01b02RawTablesDir <- paste0(projectDir, "../b01b02/data/tabular/")
-processedMapsDir <- paste0(projectDir, "model-inputs/spatial/")
-habitatDir <- paste0(projectDir, "model-outputs/spatial/1.Habitat/")
-resistanceDir <- paste0(projectDir, "model-outputs/spatial/2.Resistance/")
-networkDir <- paste0(projectDir, "model-outputs/spatial/3.NetworkConnectivity/")
-RscriptDir<-paste0(projectDir,"RScripts/")
-
-# Input parameters
-speciesList<-c("MAAM", "PLCI", "RASY", "BLBR", "URAM")
-# Run this at 30m resolution
-myResolution <- 30
 #read in table of focal species dispersal parameters
 DISP<-read.csv(paste0(b01b02RawTablesDir,"speciesDispersalParameters.csv"),header=T)
-# Set clipping threshold
-# Patches with less than clipAreaThreshold proportion of their area within the ecological boundary will be removed
-clipAreaThreshold <- 0.8
 # Load in BTSL ecological boundary
 ecobound <- raster(paste0(processedMapsDir, "b03-studyarea-30m.tif"))
 # Read in scripts for connectivity analyses
@@ -59,9 +40,9 @@ netsumBTSL<-data.frame(Species=character(), numNodes=integer(), numLinks=integer
 for(i in 1:length(speciesList)){
   species<-speciesList[i]
   
-  PatchMap<-raster(paste0(habitatDir, "/", species, '_habitatPatch_', myResolution, 'm.tif'))
-  CostMap<-raster(paste0(resistanceDir, "/", species, '_resistance_', myResolution, 'm.tif'))
-  habitatquality<-raster(paste0(habitatDir, "/", species, '_habitatSuitability_', myResolution, 'm.tif'))
+  PatchMap<-raster(paste0(b03habitatDir, "/", species, '_habitatPatch_', myResolution, 'm.tif'))
+  CostMap<-raster(paste0(b03resistanceDir, "/", species, '_resistance_', myResolution, 'm.tif'))
+  habitatquality<-raster(paste0(b03habitatDir, "/", species, '_habitatSuitability_', myResolution, 'm.tif'))
   
   ptm <- proc.time()
   mpg<-MPG(cost=CostMap,patch=PatchMap)
@@ -75,17 +56,17 @@ for(i in 1:length(speciesList)){
   mpgAnalysisTime[i,"extractSeconds"]<-elapsed_time[3]
   
   #save mpg
-  write.csv(graphdf(mpg)[[1]]$v,paste0(networkDir,species,"_patchStatsMPG.csv"),row.names=FALSE)
-  write.csv(graphdf(mpg)[[1]]$e,paste0(networkDir,species,"_linkStatsMPG.csv"),row.names=FALSE)
-  writeRaster(mpg$patchId,paste0(networkDir,species,"_patchId.tif"), overwrite=TRUE)
-  writeRaster(mpg$lcpLinkId,paste0(networkDir,species,"_linkId.tif"), overwrite=TRUE)
-  writeRaster(mpg$lcpPerimWeight,paste0(networkDir,species,"_linkWeight.tif"), overwrite=TRUE)
-  writeRaster(mpg$patchId,paste0(networkDir,species,"_patchId.asc"), overwrite=TRUE)
-  writeRaster(mpg$lcpLinkId,paste0(networkDir,species,"_linkId.asc"), overwrite=TRUE)
-  writeRaster(mpg$lcpPerimWeight,paste0(networkDir,species,"_linkWeight.asc"), overwrite=TRUE)
-  #save.image(paste0(networkDir,species,"MPG.RData"))
+  write.csv(graphdf(mpg)[[1]]$v,paste0(b03networkDir,species,"_patchStatsMPG.csv"),row.names=FALSE)
+  write.csv(graphdf(mpg)[[1]]$e,paste0(b03networkDir,species,"_linkStatsMPG.csv"),row.names=FALSE)
+  writeRaster(mpg$patchId,paste0(b03networkDir,species,"_patchId.tif"), overwrite=TRUE)
+  writeRaster(mpg$lcpLinkId,paste0(b03networkDir,species,"_linkId.tif"), overwrite=TRUE)
+  writeRaster(mpg$lcpPerimWeight,paste0(b03networkDir,species,"_linkWeight.tif"), overwrite=TRUE)
+  writeRaster(mpg$patchId,paste0(b03networkDir,species,"_patchId.asc"), overwrite=TRUE)
+  writeRaster(mpg$lcpLinkId,paste0(b03networkDir,species,"_linkId.asc"), overwrite=TRUE)
+  writeRaster(mpg$lcpPerimWeight,paste0(b03networkDir,species,"_linkWeight.asc"), overwrite=TRUE)
+  #save.image(paste0(b03networkDir,species,"MPG.RData"))
 }  
-write.csv(mpgAnalysisTime,paste0(networkDir,"AllSpeciesmpgAnalysisTime.csv"),row.names=FALSE)
+write.csv(mpgAnalysisTime,paste0(b03networkDir,"AllSpeciesmpgAnalysisTime.csv"),row.names=FALSE)
   
   ######################################
   # Clip habitat networks to ecoregion #
@@ -93,10 +74,10 @@ write.csv(mpgAnalysisTime,paste0(networkDir,"AllSpeciesmpgAnalysisTime.csv"),row
   # If this section is being run after the previous sections then load in the necessary files from disk
  for(i in 1:length(speciesList)){
      species <- speciesList[i]
-     original_patchid<-raster(paste0(networkDir, species, "_patchId.asc"))
-     linkid<-raster(paste0(networkDir, species, "_linkId.asc"))
-     linkStats<-read.csv(paste0(networkDir, species, "_linkStatsMPG.csv"), header=TRUE)
-     patchStats<-read.csv(paste0(networkDir, species, "_patchStatsMPG.csv"), header=TRUE)
+     original_patchid<-raster(paste0(b03networkDir, species, "_patchId.asc"))
+     linkid<-raster(paste0(b03networkDir, species, "_linkId.asc"))
+     linkStats<-read.csv(paste0(b03networkDir, species, "_linkStatsMPG.csv"), header=TRUE)
+     patchStats<-read.csv(paste0(b03networkDir, species, "_patchStatsMPG.csv"), header=TRUE)
      
     ptm <- proc.time()
     
@@ -185,12 +166,12 @@ write.csv(mpgAnalysisTime,paste0(networkDir,"AllSpeciesmpgAnalysisTime.csv"),row
     mpgAnalysisTime[i,"clipSeconds"]<-elapsed_time[3]
 
     #Write outputs of clipping
-    writeRaster(patchidmap_ecol, filename=paste0(networkDir, species, "_patchId_BTSL.tif"), overwrite=TRUE)
-    writeRaster(linkidmap_ecol, filename=paste0(networkDir, species, "_linkId_BTSL.tif"), overwrite=TRUE)
-    write.csv(patchStats_ecol, paste0(networkDir, species, "_patchStatsMPG_BTSL.csv"), row.names=FALSE)
-    write.csv(linkStats_ecol, paste0(networkDir, species, "_linkStatsMPG_BTSL.csv"), row.names=FALSE)
+    writeRaster(patchidmap_ecol, filename=paste0(b03networkDir, species, "_patchId_BTSL.tif"), overwrite=TRUE)
+    writeRaster(linkidmap_ecol, filename=paste0(b03networkDir, species, "_linkId_BTSL.tif"), overwrite=TRUE)
+    write.csv(patchStats_ecol, paste0(b03networkDir, species, "_patchStatsMPG_BTSL.csv"), row.names=FALSE)
+    write.csv(linkStats_ecol, paste0(b03networkDir, species, "_linkStatsMPG_BTSL.csv"), row.names=FALSE)
 }
-write.csv(mpgAnalysisTime,paste0(networkDir,"AllSpeciesmpgAnalysisTime.csv"),row.names=FALSE)
+write.csv(mpgAnalysisTime,paste0(b03networkDir,"AllSpeciesmpgAnalysisTime.csv"),row.names=FALSE)
     
     ############################
     # Analyze habitat networks #
@@ -211,12 +192,12 @@ for(i in 4:5){#1:length(speciesList)){
   # nodes<-patchStats
   # links<-linkStats
   # patchId<-original_patchid
-  nodes<-read.csv(paste0(networkDir,species,"_patchStatsMPG.csv"),header=TRUE)
-  links<-read.csv(paste0(networkDir,species,"_linkStatsMPG.csv"),header=TRUE)
-  patchId<-raster(paste0(networkDir,species,"_patchId.asc"))
+  nodes<-read.csv(paste0(b03networkDir,species,"_patchStatsMPG.csv"),header=TRUE)
+  links<-read.csv(paste0(b03networkDir,species,"_linkStatsMPG.csv"),header=TRUE)
+  patchId<-raster(paste0(b03networkDir,species,"_patchId.asc"))
 
   #produce patch-level summary of habitat quality
-  habitatquality<-raster(paste0(habitatDir, species, "_habitatSuitability_30m.tif"))
+  habitatquality<-raster(paste0(b03habitatDir, species, "_habitatSuitability_30m.tif"))
   nodeQuality<-data.frame(zonal(habitatquality,patchId,fun='mean'))
   
   #add in node quality
@@ -281,20 +262,20 @@ for(i in 4:5){#1:length(speciesList)){
   btwnName<-paste0(species, "_betweenness.csv")
   btwnMapName<-paste0(species, "_betweenness.tif")
   btwnMapName01<-paste0(species, "_betweenness_01.tif")
-  writeRaster(btwnMap, filename=paste0(networkDir, btwnMapName), overwrite=TRUE)
-  writeRaster(btwnMap01, filename=paste0(networkDir, btwnMapName01), overwrite=TRUE)
-  write.csv(btwn, paste0(networkDir, btwnName), row.names=F)
+  writeRaster(btwnMap, filename=paste0(b03networkDir, btwnMapName), overwrite=TRUE)
+  writeRaster(btwnMap01, filename=paste0(b03networkDir, btwnMapName01), overwrite=TRUE)
+  write.csv(btwn, paste0(b03networkDir, btwnName), row.names=F)
   
   # BTSL extent
   # nodes<-patchStats_ecol
   # links<-linkStats_ecol
   # patchId<-patchidmap_ecol
-  nodes<-read.csv(paste0(networkDir,species,"_patchStatsMPG_BTSL.csv"),header=TRUE)
-  links<-read.csv(paste0(networkDir,species,"_linkStatsMPG_BTSL.csv"),header=TRUE)
-  patchId<-raster(paste0(networkDir,species,"_patchId_BTSL.tif"))
+  nodes<-read.csv(paste0(b03networkDir,species,"_patchStatsMPG_BTSL.csv"),header=TRUE)
+  links<-read.csv(paste0(b03networkDir,species,"_linkStatsMPG_BTSL.csv"),header=TRUE)
+  patchId<-raster(paste0(b03networkDir,species,"_patchId_BTSL.tif"))
   
   #produce patch-level summary of habitat quality
-  habitatquality<-raster(paste0(habitatDir, species, "_habitatSuitability_30m.tif"))
+  habitatquality<-raster(paste0(b03habitatDir, species, "_habitatSuitability_30m.tif"))
   nodeQuality<-data.frame(zonal(habitatquality,patchId,fun='mean'))
   
   #add in node quality
@@ -361,9 +342,9 @@ for(i in 4:5){#1:length(speciesList)){
   btwnName<-paste0(species, "_betweenness_BTSL.csv")
   btwnMapName<-paste0(species, "_betweenness_BTSL.tif")
   btwnMapName01<-paste0(species, "_betweenness_BTSL_01.tif")
-  writeRaster(btwnMap, filename=paste0(networkDir, btwnMapName), overwrite=TRUE)
-  writeRaster(btwnMap01, filename=paste0(networkDir, btwnMapName01), overwrite=TRUE)
-  write.csv(btwn, paste0(networkDir, btwnName), row.names=F)
+  writeRaster(btwnMap, filename=paste0(b03networkDir, btwnMapName), overwrite=TRUE)
+  writeRaster(btwnMap01, filename=paste0(b03networkDir, btwnMapName01), overwrite=TRUE)
+  write.csv(btwn, paste0(b03networkDir, btwnName), row.names=F)
   
   # dEC #
 #   if(species %in% c("MAAM","URAM")){
@@ -406,11 +387,11 @@ for(i in 4:5){#1:length(speciesList)){
 #     #replace patch ids with dEC values
 #     dEC_NATALMap01<-reclassify(patchId, dEC_lookup)
 # 
-#     write.csv(dEC, paste0(networkDir, species, "_dEC.csv"), row.names=FALSE)
-#     writeRaster(dEC_GAPMap, filename=paste0(networkDir, species, "_dECGap_BTSL.tif"), overwrite=TRUE)
-#     writeRaster(dEC_NATALMap, filename=paste0(networkDir, species, "_dECNatal_BTSL.tif"), overwrite=TRUE)
-#     writeRaster(dEC_GAPMap01, filename=paste0(networkDir, species, "_dECGap_BTSL_01.tif"), overwrite=TRUE)
-#     writeRaster(dEC_NATALMap01, filename=paste0(networkDir, species, "_dECNatal_BTSL_01.tif"), overwrite=TRUE)
+#     write.csv(dEC, paste0(b03networkDir, species, "_dEC.csv"), row.names=FALSE)
+#     writeRaster(dEC_GAPMap, filename=paste0(b03networkDir, species, "_dECGap_BTSL.tif"), overwrite=TRUE)
+#     writeRaster(dEC_NATALMap, filename=paste0(b03networkDir, species, "_dECNatal_BTSL.tif"), overwrite=TRUE)
+#     writeRaster(dEC_GAPMap01, filename=paste0(b03networkDir, species, "_dECGap_BTSL_01.tif"), overwrite=TRUE)
+#     writeRaster(dEC_NATALMap01, filename=paste0(b03networkDir, species, "_dECNatal_BTSL_01.tif"), overwrite=TRUE)
 #     elapsed_time<-proc.time() - ptm
 # 
 #     #populate table tracking time for each species
@@ -424,6 +405,6 @@ mpgAnalysisTime$summaryMinutes<-mpgAnalysisTime$summarySeconds/60
 mpgAnalysisTime$btwnMinutes<-mpgAnalysisTime$btwnSeconds/60
 mpgAnalysisTime$dECMinutes<-mpgAnalysisTime$dECSeconds/60
 
-write.csv(mpgAnalysisTime,paste0(networkDir,"AllSpeciesMPGAnalysisTime.csv"),row.names=FALSE)
-write.csv(netsum,paste0(networkDir,"NetworkSummaryBR1.csv"),row.names=FALSE)
-write.csv(netsumBTSL,paste0(networkDir,"NetworkSummary_BTSLBR1.csv"),row.names=FALSE)
+write.csv(mpgAnalysisTime,paste0(b03networkDir,"AllSpeciesMPGAnalysisTime.csv"),row.names=FALSE)
+write.csv(netsum,paste0(b03networkDir,"NetworkSummaryBR1.csv"),row.names=FALSE)
+write.csv(netsumBTSL,paste0(b03networkDir,"NetworkSummary_BTSLBR1.csv"),row.names=FALSE)
