@@ -28,9 +28,6 @@ library(Makurhini)
 species <- "BLBR"
 dispersalMode <- "Natal" # "Gap"
 
-# Spatial data
-# studyArea <- st_read(file.path(b03ProcessedMapsDir, "b03-studyarea-30m.shp")) # Study area polygon
-
 # Tabular data
 dispersalDistance <- read_csv(file.path(b01b02RawTablesDir, "speciesDispersalParameters.csv"))
 
