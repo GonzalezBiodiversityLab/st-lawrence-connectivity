@@ -24,6 +24,9 @@ library(fasterize)
 # Resolution in meters
 myResolution <- 30
 
+# Coarse resolution in meters
+coarseResolution <- 240
+
 # Set up GRASS mapset for the first time
 doGRASSSetup <- F
 
@@ -39,12 +42,6 @@ speciesFillGaps <- c('MAAM','URAM')
 # Patches with less than clipAreaThreshold proportion of their area within the 
 # ecological boundary will be removed
 clipAreaThreshold <- 0.8
-
-## Connectivity patch importance parameters ----
-
-# Run settings
-species <- "URAM"
-dispersalMode <- c("Natal", "Gap") 
 
 ## Protected areas parameters ----
 
