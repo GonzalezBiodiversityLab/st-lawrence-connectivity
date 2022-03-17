@@ -1,8 +1,8 @@
 # a254
 # Bronwyn Rayfield, ApexRMS
 #
-# This script generates transition multiplier values for three climate values 
-# based off of forest age/composisiont output from Landis-II runs
+# This script generates transition multiplier values for three climate scenarios 
+# based off of forest age and composition output from Landis-II runs
 
 ## Workspace ----
 options(tibble.width = Inf, tibble.print_min = Inf)
@@ -90,14 +90,6 @@ transMultAll <- transMult %>%
 # Save to st-sim library
 myScenario <- scenario(myProject, scenarioName)
 if (saveDatasheets) saveDatasheet(myScenario, transMultAll, "stsim_TransitionMultiplierValue")
-
-# Error saving datasheet to library:
-# Cannot translate ID value for column 'TertiaryStratumID': 1
-# Warning messages:
-#   1: In if ((class(data) != "list") | (class(data[[1]]) != "data.frame")) { :
-#       the condition has length > 1 and only the first element will be used
-#     2: In if (class(cDat) != "data.frame") { :
-#         the condition has length > 1 and only the first element will be used
 
 # Save csv to disk
 write_csv(transMultAll, file.path(b03ProcessedTabularDir, "stsim-transition-mutiplier-values-baseline.csv"))
