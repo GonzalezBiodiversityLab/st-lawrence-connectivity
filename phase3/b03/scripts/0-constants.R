@@ -11,8 +11,9 @@ Sys.setenv(TZ='UTC')
 
 # Load packages
 library(raster)
+library(sf)
 library(tidyverse)
-
+library(fasterize)
 
 # Parameters ----
 ## Global parameters ----
@@ -47,3 +48,4 @@ b01b02RawTablesDir <- file.path(b01b02Dir, "inputs", "rawData", "tables")
 # b03circuitscapeDir <- file.path(b03Dir, "model-outputs", "spatial", "5.Circuitscape")
 
 # Functions ----
+

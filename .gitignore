@@ -40,6 +40,7 @@ vignettes/*.pdf
 .Renviron
 
 # Folders to be ignored
+**/b03/libraries
 **/b03/data/spatial
 **/b03/data/tabular/old
 **/b03/model-inputs
@@ -53,9 +54,11 @@ vignettes/*.pdf
 **/b01b02/maps
 **/b01b02/model-inputs/spatial
 **/b01b02/data/spatial
+**/b01b02/model-inputs/spatial
 **/b01b02/outputs
 **/b01b02/QGISstyles
 **/combined/maps
+**/b03/libraries
 
 # Files to be ignored
 phase2/junk
