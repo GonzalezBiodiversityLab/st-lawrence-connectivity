@@ -1,3 +1,18 @@
+#####################################################################
+# a254      
+# Prepare Zonation inputs 
+# 03-2022                                       					
+#                             
+#   Inputs (for focal species):
+#    -habitat suitability, short and long betweenness,
+#    -short and long dEC, current density
+#    -protected areas
+#  
+#   Outputs:
+#    -all layers formatted for Zonation input
+#                                                                   
+# Script by B Rayfield for ApexRMS 									
+#####################################################################
 
 # Workspace -------------------
 
@@ -143,7 +158,7 @@ for(i in 1:length(speciesList)){
     maxMinTable[k, "Min"] <- as.numeric(strsplit(statistic[agrep(statistic, pattern = "min")], "=")[[1]][[2]])
   }
 }
-write.csv(maxMinTable, file.path(b03zonationDir, "MaxMinTable.csv"), row.names=F)
+write.csv(maxMinTable, file.path(b03zonationDir, "ZonationInputs", "MaxMinTable.csv"), row.names=F)
 
 #Summed species maps
 execGRASS('r.mapcalc',expression='all_habitatSuitabilityFocal_NatAreas=(if(isnull(MAAM_habitatSuitabilityFocal_NatAreas_01),0,MAAM_habitatSuitabilityFocal_NatAreas_01)+if(isnull(BLBR_habitatSuitabilityFocal_NatAreas_01),0,BLBR_habitatSuitabilityFocal_NatAreas_01)+if(isnull(URAM_habitatSuitabilityFocal_NatAreas_01),0,URAM_habitatSuitabilityFocal_NatAreas_01)+if(isnull(PLCI_habitatSuitabilityFocal_NatAreas_01),0,PLCI_habitatSuitabilityFocal_NatAreas_01)+if(isnull(RASY_habitatSuitabilityFocal_NatAreas_01),0,RASY_habitatSuitabilityFocal_NatAreas_01))*studyArea1', flags=c('overwrite'))
@@ -176,7 +191,7 @@ for(i in 1:length(speciesList)){
   species<-speciesList[i]
   for(j in 1:nrow(conservationCriteriaList)){
     execGRASS('r.patch', input=paste0(species, '_', conservationCriteriaNames[j], ',Z_mask0_BTSL'),output=paste0('Z_', species, '_', conservationCriteriaNames[j]),flags=c('overwrite'))
-    execGRASS('r.out.gdal',input=paste0('Z_', species, '_', conservationCriteriaNames[j]),output=file.path(b03zonationDir, paste0(species, '_', conservationCriteriaNames[j], '_Z.tif')),format='GTiff',flags=c('overwrite'))
+    execGRASS('r.out.gdal',input=paste0('Z_', species, '_', conservationCriteriaNames[j]),output=file.path(b03zonationDir, "ZonationInputs", paste0(species, '_', conservationCriteriaNames[j], '_Z.tif')),format='GTiff',flags=c('overwrite'))
   }
 }
 
@@ -185,13 +200,13 @@ for(i in 1:length(speciesList)){
   species<-speciesList[i]
   for(j in 1:length(connectivityCriteriaNames)){
     execGRASS('r.patch', input=paste0(species, '_', connectivityCriteriaNames[j], '_01,Z_mask0_BTSL'),output=paste0('Z_', species, '_', connectivityCriteriaNames[j], '_01'),flags=c('overwrite'))
-    execGRASS('r.out.gdal',input=paste0('Z_', species, '_', connectivityCriteriaNames[j], '_01'),output=file.path(b03zonationDir, paste0(species, '_', connectivityCriteriaNames[j], '_01_Z.tif')),format='GTiff',flags=c('overwrite'))
+    execGRASS('r.out.gdal',input=paste0('Z_', species, '_', connectivityCriteriaNames[j], '_01'),output=file.path(b03zonationDir, "ZonationInputs", paste0(species, '_', connectivityCriteriaNames[j], '_01_Z.tif')),format='GTiff',flags=c('overwrite'))
   }
 }
 
 # Change the extent of the protected areas raster to match the geographic regions for Zonation analysis
 execGRASS('r.mapcalc', expression='Z_protectedAreas=protectedAreas', flags=c('overwrite'))
-execGRASS('r.out.gdal',input='Z_protectedAreas',output=file.path(b03zonationDir, 'Z_protectedAreas.tif'),format='GTiff',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='Z_protectedAreas',output=file.path(b03zonationDir, "ZonationInputs", 'Z_protectedAreas.tif'),format='GTiff',flags=c('overwrite'))
 
 # Reset the geographic region
 execGRASS('g.region', raster='StudyArea1', res=paste0(myResolution))
