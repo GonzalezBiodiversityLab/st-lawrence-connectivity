@@ -78,6 +78,7 @@ b03resistanceDir <- file.path(b03Dir, "model-outputs", "spatial", "2.Resistance"
 b03networkDir <- file.path(b03Dir, "model-outputs", "spatial", "3.NetworkConnectivity")
 b03patchImportanceDir <- file.path(b03Dir, "model-outputs", "spatial", "4.PatchImportance")
 b03circuitscapeDir <- file.path(b03Dir, "model-outputs", "spatial", "5.Circuitscape")
+b03zonationDir <-file.path(b03Dir, "model-outputs", "spatial", "6.Zonation")
 
 # Functions ----
 # Rescale a raster layer

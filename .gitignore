@@ -55,6 +55,7 @@ vignettes/*.pdf
 **/b01b02/outputs
 **/b01b02/QGISstyles
 **/combined/maps
+**/b03/libraries
 
 # Files to be ignored
 phase2/junk
