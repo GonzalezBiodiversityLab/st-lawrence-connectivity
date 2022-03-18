@@ -173,14 +173,14 @@ execGRASS('r.mapcalc',expression='all_qualityconnectivityFocal_NatAreas=all_habi
 #execGRASS('r.mapcalc',expression='all_qualityconnectivityFocal_NatAreas=all_habitatSuitabilityFocal_NatAreas+all_currentFlowFocal_NatAreas+all_betweennessLongFocal_NatAreas+all_betweennessShortFocal_NatAreas+all_dECGapFocal_NatAreas+all_dECNatalFocal_NatAreas', flags=c('overwrite'))
 
 #Save summed species maps
-execGRASS('r.out.gdal',input='all_habitatSuitabilityFocal_NatAreas',output=file.path(b03habitatDir,'all_habitatSuitability.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
-execGRASS('r.out.gdal',input='all_currentFlowFocal_NatAreas',output=file.path(b03networkDir,'all_currentFlow.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_habitatSuitabilityFocal_NatAreas',output=file.path(b03habitatDir,paste0('ALL_habitatSuitability_NatAreas_01_', myResolution, 'm.tif')),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_currentFlowFocal_NatAreas',output=file.path(b03circuitscapeDir, paste0("ALL_currendensity_NatAreas_Log01_", myResolution, "m.tif")),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
 #execGRASS('r.out.gdal',input='all_betweennessLongFocal_NatAreas',output=file.path(b03networkDir,'all_betweennessLong.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
-execGRASS('r.out.gdal',input='all_betweennessShortFocal_NatAreas',output=file.path(b03networkDir,'all_betweennessShort.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
-execGRASS('r.out.gdal',input='all_dECGapFocal_NatAreas',output=file.path(b03patchImportanceDir,'all_dECGap.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
-execGRASS('r.out.gdal',input='all_dECNatalFocal_NatAreas',output=file.path(b03patchImportanceDir,'all_dECNatal.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
-execGRASS('r.out.gdal',input='all_connectivityFocal_NatAreas',output=file.path(b03networkDir,'all_connectivity.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
-execGRASS('r.out.gdal',input='all_qualityconnectivityFocal_NatAreas',output=file.path(b03networkDir,'all_qualityconnectivity.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_betweennessShortFocal_NatAreas',output=file.path(b03networkDir,paste0('ALL_betweennessShort_01_', myResolution, 'm.tif')),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_dECGapFocal_NatAreas',output=file.path(b03patchImportanceDir,'ALL_dECGap_01_240m.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_dECNatalFocal_NatAreas',output=file.path(b03patchImportanceDir,'ALL_dECNatal_01_240m.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_connectivityFocal_NatAreas',output=file.path(b03networkDir,'ALL_connectivity.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_qualityconnectivityFocal_NatAreas',output=file.path(b03networkDir,'ALL_qualityConnectivity.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
 
 
 # Set geographic region for Zonation analysis (add 1 row of NA pixels all around each map)
