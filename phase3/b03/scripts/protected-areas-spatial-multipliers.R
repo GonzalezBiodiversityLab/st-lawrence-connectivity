@@ -17,20 +17,26 @@ source("./b03/scripts/0-constants.R")
 primaryStratumRaster <- raster(file.path(b03ProcessedMapsDir, "PrimaryStratum_90m.tif"))
 # b03 extent
 b03Extent <- raster(file.path(b03ProcessedMapsDir, "SecondaryStratum_90m_b03Extent.tif"))
+
 # Protected Areas
-protectedAreasRaster <- raster(file.path(b03RawMapsDir, "AP-b03.tif"))
+protectedAreasShapefile <- st_read(dsn = b03RawMapsDir, layer = "AP_REG_S_20210824")
 # RMN protected areas
 rmnShapefile <- st_read(dsn = b03RawMapsDir, layer = "RMN_20210608")
 # Atlas priority areas
 sitesMulticibleRawRaster <- raster(file.path(b03RawMapsDir, "sites-multicible.tif"))
 
 # Protected areas + RMN protected areas spatial multiplier ----
+# Rasterize protectedAreasShapefile
+protectedAreasRaster <- fasterize(sf = protectedAreasShapefile,
+                                  raster = primaryStratumRaster,
+                                  background = 0)
+
 # Rasterize rmnShapefile
 rmnRaster <- fasterize(sf = rmnShapefile,
                        raster = primaryStratumRaster,
                        background = 0)
 
-# Add conservation priotity layers to protected areas layer 
+# Add rmn areas to protected areas layer 
 protectedAreasRmnRawRaster <- protectedAreasRaster + rmnRaster
 protectedAreasRmnRawRaster[protectedAreasRmnRawRaster == 0] <- -1
 protectedAreasRmnRawRaster[protectedAreasRmnRawRaster != -1] <- 0  
@@ -90,5 +96,5 @@ writeRaster(x = sitesMulticibleCroppedRaster,
             filename = file.path(b03ProcessedMapsDir, "SpatialMultiplier_AtlasPriorityAreas_b03Extent.tif"),
             overwrite = TRUE)
 writeRaster(x = allAreasReclassifiedCroppedRaster, 
-            filename = file.path(b03ProcessedMapsDir, "SpatialMultiplier_AllProtectedAreas_AtlasPriorityAreas_b03Extent.tif"),
+            filename = file.path(b03ProcessedMapsDir, "SpatialMultiplier_ProtectedAreas_AtlasPriorityAreas_b03Extent.tif"),
             overwrite = TRUE)
