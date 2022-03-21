@@ -21,6 +21,9 @@ library(scales)
 # Parameters ----
 ## Global parameters ----
 
+# List of species codes
+speciesList <- c("MAAM", "BLBR", "URAM", "PLCI", "RANA")
+
 
 ## Transition Multiplier parameters ----
 initYear <- 2010
@@ -46,8 +49,15 @@ b01b02RawTablesDir <- file.path(b01b02Dir, "inputs", "rawData", "tables")
 ## Composite directories ----
 b03ResultsMapsDir <- file.path(b03Dir, "model-outputs", "spatial")
 b03ResultsTabularDir <- file.path(b03Dir, "model-outputs", "tabular")
+b03zonationDir <- file.path(b03Dir, "model-outputs", "zonation")
 
 # Functions ----
+# Rescale a raster layer
+rescaleR <- function(x, new.min = 0, new.max = 1) {
+  x.min = suppressWarnings(min(x, na.rm=TRUE))
+  x.max = suppressWarnings(max(x, na.rm=TRUE))
+  new.min + (x - x.min) * ((new.max - new.min) / (x.max - x.min))
+}
 
 # Mapping functions
 #Assemble all the pieces and map them together

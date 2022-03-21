@@ -105,6 +105,7 @@ for(scn in 1:numScenarios){
   # Pixel-level summary
   natAreasProbConversion <- (natAreas12 / numIterations)  * natAreasMask
   
+  writeRaster(natAreasMask, file.path(b03ProcessedMapsDir, "b03-buffer-natural-areas-2010.tiff"))
   writeRaster(natAreasProbConversion, file.path(b03ResultsMapsDir, paste0(resultTag[scn], "_", timestep1, "-", timestep2, "_NaturalAreaProbConversion_BTSL_b03.tif")), overwrite=T)
 
   # Ecoregion level-4 summary
