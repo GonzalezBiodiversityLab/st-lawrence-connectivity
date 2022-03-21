@@ -14,6 +14,9 @@ library(raster)
 library(sf)
 library(tidyverse)
 library(fasterize)
+library(tidyverse)
+library(rsyncrosim)
+library(scales)
 
 # Parameters ----
 ## Global parameters ----
@@ -41,11 +44,33 @@ b01b02RawMapsDir <- file.path(b01b02Dir, "inputs", "rawData", "maps")
 b01b02RawTablesDir <- file.path(b01b02Dir, "inputs", "rawData", "tables")
 
 ## Composite directories ----
-# b03habitatDir <- file.path(b03Dir, "model-outputs", "spatial", "1.Habitat")
-# b03resistanceDir <- file.path(b03Dir, "model-outputs", "spatial", "2.Resistance")
-# b03networkDir <- file.path(b03Dir, "model-outputs", "spatial", "3.NetworkConnectivity")
-# b03patchImportanceDir <- file.path(b03Dir, "model-outputs", "spatial", "4.PatchImportance")
-# b03circuitscapeDir <- file.path(b03Dir, "model-outputs", "spatial", "5.Circuitscape")
+b03ResultsMapsDir <- file.path(b03Dir, "model-outputs", "spatial")
+b03ResultsTabularDir <- file.path(b03Dir, "model-outputs", "tabular")
 
 # Functions ----
 
+# Mapping functions
+#Assemble all the pieces and map them together
+#Define the map theme
+theme_map <- function(...) {
+  theme_minimal() +
+    theme(
+      #text = element_text(family = "Arial", color = "#22211d"),
+      axis.line = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_blank(),
+      plot.background = element_rect(fill = "white", color = NA), 
+      panel.background = element_rect(fill = "white", color = NA), 
+      legend.background = element_rect(fill = "white", color = NA),
+      #panel.border = element_rect(colour = "grey", fill=NA, size=1),
+      legend.position="bottom",
+      legend.margin=margin(0,0,0,0),
+      legend.box.margin=margin(-10,-10,-10,-10),
+      plot.margin=grid::unit(c(0,0,0,0), "mm")
+    )
+}

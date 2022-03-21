@@ -1,77 +1,44 @@
-library(tidyverse)
-library(rsyncrosim)
-library(raster)
-library(fasterize)
-library(sf)
-library(scales)
+
+# Load constants, functions, etc
+source("./b03/scripts/0-constants.R")
 
 
 options(tibble.width = Inf, tibble.print_min = Inf)
 
+
 #### Inputs ####
 # Input parameters
-resultTag <- c("CON_NC","BAU_NC")
+resultTag <- c("BAU_85")
 numScenarios <- length(resultTag)
-numIterations <- 40
+numIterations <- 10
 timestep1 = 2010
 timestep2 = 2110
 
 # Input files and folders
-workingDir <- "C:/Users/bronw/Documents/Apex/Projects/Active/A224_MDDELCC/stsim/ResultsSummary/"
+fig5Dir <- "../Report/phase3/Figures/Figure5"
 
 # Primary stratum
-spatialInitialConditionsDir <- "C:/Users/bronw/Documents/Apex/Projects/Active/A224_MDDELCC/stsim/SpatialInitialConditions/FullExtent/"
-primaryStratumFileName <- "PrimaryStratum.tif"
-
-####MAPPING FUNCTIONS####
-
-#Assemble all the pieces and map them together
-#Define the map theme
-theme_map <- function(...) {
-  theme_minimal() +
-    theme(
-      #text = element_text(family = "Arial", color = "#22211d"),
-      axis.line = element_blank(),
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      axis.ticks = element_blank(),
-      axis.title.x = element_blank(),
-      axis.title.y = element_blank(),
-      panel.grid.minor = element_blank(),
-      panel.grid.major = element_blank(),
-      plot.background = element_rect(fill = "white", color = NA), 
-      panel.background = element_rect(fill = "white", color = NA), 
-      legend.background = element_rect(fill = "white", color = NA),
-      #panel.border = element_rect(colour = "grey", fill=NA, size=1),
-      legend.position="bottom",
-      legend.margin=margin(0,0,0,0),
-      legend.box.margin=margin(-10,-10,-10,-10),
-      plot.margin=grid::unit(c(0,0,0,0), "mm")
-    )
-}
-
-
+primaryStratumFileName <- "PrimaryStratum_90m_b03Extent.tif"
 
 # STSim
-SyncroSimDir <- "C:/Users/bronw/Documents/Apex/SyncroSim/2-2-10/"
-modelDir <- c("D:/Apex/Projects/A224/stsim/CON_NC_backup/", 
-              "D:/Apex/Projects/A224/stsim/BAU_NC_backup/")
-resultScenarioNumber <- c(166, 164)
+mySession <- session()
+modelDir <- c(b03Libraries)
+resultScenarioNumber <- c(211)
 modelFile <- "BTSL_stconnect.ssim"
 
 #### Create clipping mask
-primaryStratum <- raster(paste0(spatialInitialConditionsDir, primaryStratumFileName))
+primaryStratum <- raster(file.path(b03ProcessedMapsDir, primaryStratumFileName))
 # BTSL map
 btslMask <- Which(primaryStratum %in% c(3))
 btslMask[btslMask == 0] <- NA
 
 #Shapefile with ecoregions
-bt4 <- st_read("C:/Users/bronw/Documents/Apex/Projects/Active/A224_MDDELCC/Data/CERO04_BTSL20201127.shp")
+bt4 <- st_read(file.path(b03RawMapsDir, "CR_CERQ_NIV_04_S_b03.shp"))
 bt6=fasterize(bt4, primaryStratum, field="FID04")
-writeRaster(bt6, "C:/Users/bronw/Documents/Apex/Projects/Active/A224_MDDELCC/Data/CERO04_BTSL20201127.tif")
+writeRaster(bt6, file.path(b03RawMapsDir, "CR_CERQ_NIV_04_S_b03.tif"), overwrite = TRUE)
 
 #Saint-Lawrence Lowlands
-bt=st_read("C:/Users/bronw/Documents/Apex/Projects/Active/A224_MDDELCC/Data/btsl_90m_polygon.shp")
+bt=st_read(file.path(b03ProcessedMapsDir, "b03-studyarea.shp"))
 btp=as(bt, "Spatial")
 
 # State class maps and transitions ---------------------------------------------------
@@ -80,9 +47,8 @@ for(scn in 1:numScenarios){
   print(paste("Working on scenario", resultTag[scn]))
   
   # Setting up st-sim library, project, scenario
-  mySession <- session(SyncroSimDir)
-  myLibrary <- ssimLibrary(paste0(modelDir[scn], modelFile), session=mySession)
-  myProject <- project(myLibrary, "Definitions")  # Assumes there is only one default project per library
+  myLibrary <- ssimLibrary(name = file.path(modelDir[scn], modelFile), session = mySession, package = "stconnect")
+  myProject <- project(ssimObject = myLibrary, project = "Definitions")  # Assumes there is only one default project per library
   myScenario <- scenario(myProject, resultScenarioNumber[scn])
   #datasheet(myScenario)
   
@@ -139,7 +105,7 @@ for(scn in 1:numScenarios){
   # Pixel-level summary
   natAreasProbConversion <- (natAreas12 / numIterations)  * natAreasMask
   
-  writeRaster(natAreasProbConversion, paste0(workingDir, resultTag[scn], "_", timestep1, "-", timestep2, "_NaturalAreaProbConversion_BTSL.tif"), overwrite=T)
+  writeRaster(natAreasProbConversion, file.path(b03ResultsMapsDir, paste0(resultTag[scn], "_", timestep1, "-", timestep2, "_NaturalAreaProbConversion_BTSL_b03.tif")), overwrite=T)
 
   # Ecoregion level-4 summary
   
@@ -192,7 +158,7 @@ for(scn in 1:numScenarios){
                            ))
 
 ggsave(
-  paste0(workingDir, resultTag[scn], "_", timestep1, "-", timestep2, "_NaturalAreaProbConversion_BTSL_Ecoregion1.png"), q, height=4, width=11)
+  file.path(fig5Dir, paste0(resultTag[scn], "_", timestep1, "-", timestep2, "_NaturalAreaProbConversion_BTSL_b03.png")), q, height=4, width=11)
 
 }  
 
