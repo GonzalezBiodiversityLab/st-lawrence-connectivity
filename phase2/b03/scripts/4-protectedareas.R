@@ -19,6 +19,8 @@ source("./b03/scripts/0-0-constants.R")
       # Study Area
 studyArea_shp_Name <- file.path(b03ProcessedMapsDir, "b03-buffer-studyarea.shp")
 studyArea_tif_Name <- file.path(b03ProcessedMapsDir, "b03-buffer-studyarea-30m.tif")
+studyAreaFocal_shp_Name <- file.path(b03ProcessedMapsDir, "b03-studyarea.shp")
+studyAreaFocal_tif_Name <- file.path(b03ProcessedMapsDir, "b03-studyarea-30m.tif")
 
       # Protected Areas
 AP_Name <- file.path(b03RawMapsDir, "AP_REG_S_20210824.shp")
@@ -43,6 +45,8 @@ execGRASS("g.mapset", mapset = "ProtectedAreas", flags="c")
 # Import data
 execGRASS("v.in.ogr", input=studyArea_shp_Name, output="rawData_vStudyArea", flags=c("overwrite", "o"))
 execGRASS('r.in.gdal', input=studyArea_tif_Name, output='rawData_rStudyArea', flags=c("overwrite", "o"))
+execGRASS("v.in.ogr", input=studyAreaFocal_shp_Name, output="rawData_vStudyAreaFocal", flags=c("overwrite", "o"))
+execGRASS("r.in.gdal", input=studyAreaFocal_tif_Name, output="rawData_rStudyAreaFocal", flags=c("overwrite", "o"))
 execGRASS("v.in.ogr", input=AP_Name, output="rawData_AP", snap=30, flags=c("overwrite", "o"))
 execGRASS("v.in.ogr", input=RMN_Name, output="rawData_RMN", snap=30, flags=c("overwrite", "o"))
 execGRASS('r.in.gdal', input=landCover_Name, output='landCover', flags=c("overwrite", "o"))
@@ -174,8 +178,8 @@ nPatches <- v.get.att('AP_final', "@") %>%
 colnames(nPatches) <- "NumberOfPatches"
 write.csv(nPatches, file.path(b03ProcessedTabularDir, "num-patches-ap-buffer.csv"), row.names = F)
 
-      # Save shapefile
-execGRASS('v.out.ogr', input='AP_final', output=file.path(b03ProcessedMapsDir, 'protected-areas-ap.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
+#      # Save shapefile
+#execGRASS('v.out.ogr', input='AP_final', output=file.path(b03ProcessedMapsDir, 'protected-areas-ap.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
 
 #### Produce Protected Area layer #2: AP and RMN areas ####
 # Set region to all of Quebec again
@@ -264,7 +268,7 @@ colnames(nPatches) <- "NumberOfPatches"
 write.csv(nPatches, file.path(b03ProcessedTabularDir, "num-patches-ap-rmn-multipart-buffer.csv"), row.names = F)
 
       # Save shapefile
-execGRASS('v.out.ogr', input='all_final', output=file.path(b03ProcessedMapsDir, 'protected-areas-ap-rmn-multipart.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
+#execGRASS('v.out.ogr', input='all_final', output=file.path(b03ProcessedMapsDir, 'protected-areas-ap-rmn-multipart.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
 
 # Multipart to singlepart
 execGRASS('v.category', input='all_final', output='all_final_singlepart_inter', option='del', cat=-1)
@@ -272,7 +276,7 @@ execGRASS('v.category', input='all_final_singlepart_inter', output='all_final_si
 execGRASS('g.remove', type='vector', name='all_final_singlepart_inter', 'f')
 
 # Save shapefile
-execGRASS('v.out.ogr', input='all_final_singlepart', output=file.path(b03ProcessedMapsDir, 'protected-areas-ap-rmn-singlepart.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
+execGRASS('v.out.ogr', input='all_final_singlepart', output=file.path(b03ProcessedMapsDir, 'protected-areas-150ha-btsl-900ha-buffer.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
 
 
 # Crop to within BTSL
@@ -301,4 +305,19 @@ execGRASS('v.db.dropcolumn', map='all_final_btsl_no_gatineau', columns='b_area_h
 execGRASS('v.db.dropcolumn', map='all_final_btsl_no_gatineau', columns='b_studyArea')
 
 # Save shapefile
-execGRASS('v.out.ogr', input='all_final_btsl_no_gatineau', output=file.path(b03ProcessedMapsDir, 'protected-areas-ap-rmn-multipart-btsl.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
+execGRASS('v.out.ogr', input='all_final_btsl_no_gatineau', output=file.path(b03ProcessedMapsDir, 'protected-areas-150ha-btsl.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
+
+
+# Crop to within BTSL Focal (b03)
+execGRASS('v.overlay', ainput='all_final_btsl_no_gatineau', binput='rawData_vStudyAreaFocal', operator='and', output='all_final_btsl_no_gatineau_focal', flags = c('t', 'overwrite'))
+# Save shapefile
+execGRASS('v.out.ogr', input='all_final_btsl_no_gatineau_focal', output=file.path(b03ProcessedMapsDir, 'protected-areas-150ha-btsl-focal.shp'), format='ESRI_Shapefile', flags=c('m', 'overwrite'))
+
+# Rasterize PAs
+# Set region to that of focal area
+execGRASS('g.region', raster='rawData_rStudyAreaFocal')
+# Rasterize
+execGRASS("v.to.rast", input="all_final_btsl_no_gatineau_focal", use="val", value=1, output="all_final_btsl_no_gatineau_focal_30m", flags=c("overwrite"))
+# Save raster
+execGRASS('r.out.gdal', input='all_final_btsl_no_gatineau_focal_30m', output=file.path(b03ProcessedMapsDir, paste0('protected-areas-150ha-btsl-focal-', myResolution, 'm.tif')), format='GTiff', createopt='COMPRESS=LZW', flags=c('overwrite'))
+

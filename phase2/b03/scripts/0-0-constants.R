@@ -24,6 +24,9 @@ library(fasterize)
 # Resolution in meters
 myResolution <- 30
 
+# Coarse resolution in meters
+coarseResolution <- 240
+
 # Set up GRASS mapset for the first time
 doGRASSSetup <- F
 
@@ -33,18 +36,17 @@ speciesList <- c("MAAM", "BLBR", "URAM", "PLCI", "RASY")
 # Species that should have gaps within patches filled
 speciesFillGaps <- c('MAAM','URAM')
 
+## Connectivity parameters ----
+
+# Set to TRUE to calculate short-range centrality
+withinBTSL <- FALSE
+
 ## Habitat network analysis parameters ----
 
 # Set clipping threshold
 # Patches with less than clipAreaThreshold proportion of their area within the 
 # ecological boundary will be removed
 clipAreaThreshold <- 0.8
-
-## Connectivity patch importance parameters ----
-
-# Run settings
-species <- "URAM"
-dispersalMode <- c("Natal", "Gap") 
 
 ## Protected areas parameters ----
 
@@ -81,6 +83,7 @@ b03resistanceDir <- file.path(b03Dir, "model-outputs", "spatial", "2.Resistance"
 b03networkDir <- file.path(b03Dir, "model-outputs", "spatial", "3.NetworkConnectivity")
 b03patchImportanceDir <- file.path(b03Dir, "model-outputs", "spatial", "4.PatchImportance")
 b03circuitscapeDir <- file.path(b03Dir, "model-outputs", "spatial", "5.Circuitscape")
+b03zonationDir <-file.path(b03Dir, "model-outputs", "spatial", "6.Zonation")
 
 # Functions ----
 # Rescale a raster layer
