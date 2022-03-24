@@ -36,11 +36,6 @@ speciesList <- c("MAAM", "BLBR", "URAM", "PLCI", "RASY")
 # Species that should have gaps within patches filled
 speciesFillGaps <- c('MAAM','URAM')
 
-## Connectivity parameters ----
-
-# Set to TRUE to calculate short-range centrality
-withinBTSL <- FALSE
-
 ## Habitat network analysis parameters ----
 
 # Set clipping threshold
