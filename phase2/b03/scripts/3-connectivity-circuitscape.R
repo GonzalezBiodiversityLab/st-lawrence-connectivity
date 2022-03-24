@@ -20,19 +20,17 @@ source("./b03/scripts/0-0-constants.R")
 ## Workspace ---------------------------------------------------------
 
 # Spatial data
-studyArea <- focalArea <- st_read(file.path(b03processedMapsDir, "b03-studyarea.shp")) # Study area polygon
+studyArea <- st_read(file.path(b03ProcessedMapsDir, "b03-studyarea.shp")) # Study area polygon
 
 # Tabular data
 dispersalDistance <- read_csv(file.path(b01b02RawTablesDir, "speciesDispersalParameters.csv"))
 
 ## Run Circuitscape for focal species -----------------------------------------
 # Loop through species, generating Circuitscape data and saving outputs
-for (i in speciesList){
-  
-  species <- i
+for (species in speciesList){
   
   ## Load data for focal species
-  resistance <- raster(file.path(resistanceDir, paste0(species, "_resistance_", myResolution, "m.tif")))
+  resistance <- raster(file.path(b03resistanceDir, paste0(species, "_resistance_", coarseResolution, "m.tif")))
   
   # Create focal regions
   # Create focal region raster for N-S by adding top and bottom rows
@@ -49,9 +47,9 @@ for (i in speciesList){
   
   # Extend resistance rasters to match NS and EW extents
   resistanceNS<-extend(resistance, extentNS,value=1)
-  resistanceNS[is.na(resistanceNS)]<-100
+  resistanceNS[is.na(resistanceNS)]<-8
   resistanceEW<-extend(resistance, extentEW,value=1)
-  resistanceEW[is.na(resistanceEW)]<-100
+  resistanceEW[is.na(resistanceEW)]<-8
   
   # Save focal region and extended resistance rasters to temporary folder as Circuitscape inputs
   # Focal region rasters
@@ -136,11 +134,14 @@ for (i in speciesList){
     trim(.) # Trim extra white spaces  
   
   # Write outputs
-  writeRaster(currMapOMNI, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_", myResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_", myResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_log_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_", myResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNIFocal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_Focal_", myResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_Focal_", myResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_log_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_Focal_", myResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_", coarseResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_", coarseResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_log_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_", coarseResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNIFocal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_Focal_", coarseResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_Focal_", coarseResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_log_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_Focal_", coarseResolution, "m.tif")), overwrite=TRUE)  
   
+  file.copy(file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_Focal_", coarseResolution, "m.tif")),
+            file.path(b03circuitscapeDir, paste0(species, "_currentdensity_Focal_", coarseResolution, "m.tif")),
+            overwrite = TRUE)
 }
