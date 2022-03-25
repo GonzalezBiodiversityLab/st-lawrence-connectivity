@@ -69,17 +69,18 @@ for(species in speciesList){
   # Save outputs ----
   #geotif
   writeRaster(shortBtwnRaster, file.path(b03networkDir, paste0(species, "_ShortBetweenness_", myResolution, "m.tif")), overwrite=TRUE)
-  writeRaster(mpg$lcpPerimWeight, file.path(b03networkDir, paste0(species, "_LinkLength_", myResolution, "m.tif")), overwrite=TRUE)
-  writeRaster(lcpPerimWeightBinary, file.path(b03networkDir, paste0(species, "_LinkLength_01_", myResolution, "m.tif")), overwrite=TRUE)
+  writeRaster(mpg$lcpPerimWeight, file.path(b03networkDir, paste0(species, "_LinkLength_", myResolution, "m_b03.tif")), overwrite=TRUE)
+  writeRaster(lcpPerimWeightBinary, file.path(b03networkDir, paste0(species, "_LinkLength_01_", myResolution, "m_b03.tif")), overwrite=TRUE)
   #shapefile
-  st_write(linkPolygon, dsn = b03networkDir, layer = paste0(species, "_LinkLength_", myResolution), driver = "ESRI Shapefile", append = FALSE)
+  st_write(linkPolygon, dsn = b03networkDir, layer = paste0(species, "_LinkLength_", myResolution, "_b03"), driver = "ESRI Shapefile", append = FALSE)
 }
   
 # Generate long-range betweenness layers ----
 for(species in speciesList){
+
   # Read in data
-  habitatRaster <- raster(file.path(b03habitatDir, paste0(species, "_habitatPatch_", coarseResolution, "m.tif")))
-  resistanceRaster <- raster(file.path(b03resistanceDir, paste0(species, "_resistance_", coarseResolution, "m.tif")))
+  habitatRaster <- raster(file.path(b03habitatDir, paste0(species, "_habitatPatch_", myResolution, "m.tif")))
+  resistanceRaster <- raster(file.path(b03resistanceDir, paste0(species, "_resistance_", myResolution, "m.tif")))
   
   # Extract mpg ----
   mpg <- MPG(cost = resistanceRaster, patch = habitatRaster)
@@ -92,7 +93,7 @@ for(species in speciesList){
   btwnRaster <- reclassify(mpg$patchId, btwn_lookup)
   
   # Mask long-range betweenness rasters to b03 filtered patches
-  filteredPatchRaster <- raster(file.path(b03habitatDir, paste0(species, "_habitatPatch_Focal_Filtered_", coarseResolution, "m.tif")))
+  filteredPatchRaster <- raster(file.path(b03habitatDir, paste0(species, "_habitatPatch_Focal_Filtered_", myResolution, "m.tif")))
   filteredPatchRaster[filteredPatchRaster == 0] <- NA
     
   maskedBtwnRaster <- btwnRaster * filteredPatchRaster
@@ -115,8 +116,20 @@ for(species in speciesList){
   
   PCnum <- sum(PC_mat)
   ECNatal <- sqrt(PCnum)
+  
+  # Convert link rasters to shapefiles ----
+  linkPolygon <- rasterToPolygons(mpg$lcpPerimWeight) %>% st_as_sf
+  
+  # Make binary link layers
+  lcpPerimWeightBinary <- mpg$lcpPerimWeight
+  lcpPerimWeightBinary[lcpPerimWeightBinary >= 0] <- 1
+  lcpPerimWeightBinary[is.na(lcpPerimWeightBinary)] <- 0
 
   # Save outputs ----
   #geotif
-  writeRaster(maskedBtwnRaster, file.path(b03networkDir, paste0(species, "_LongBetweenness_", coarseResolution, "m.tif")), overwrite=TRUE)
+  writeRaster(maskedBtwnRaster, file.path(b03networkDir, paste0(species, "_LongBetweenness_", myResolution, "m.tif")), overwrite=TRUE)
+  writeRaster(mpg$lcpPerimWeight, file.path(b03networkDir, paste0(species, "_LinkLength_", myResolution, "m.tif")), overwrite=TRUE)
+  writeRaster(lcpPerimWeightBinary, file.path(b03networkDir, paste0(species, "_LinkLength_01_", myResolution, "m.tif")), overwrite=TRUE)
+  #shapefile
+  st_write(linkPolygon, dsn = b03networkDir, layer = paste0(species, "_LinkLength_", myResolution), driver = "ESRI Shapefile", append = FALSE)
 }
