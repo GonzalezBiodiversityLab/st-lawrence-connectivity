@@ -9,23 +9,32 @@ source("./b03/scripts/0-constants.R")
 # Workspace ----
 # Load spatial data
 secondaryStratumRaster <- raster(file.path(b03ProcessedMapsDir, "SecondaryStratum_90m.tif"))
-secondaryStratumCroppedRaster <- raster(file.path(b03ProcessedMapsDir, "SecondaryStratum_90m_finalExtent.tif"))
+secondaryStratumCroppedRaster <- raster(file.path(b03ProcessedMapsDir, "SecondaryStratum_90m_b03Extent.tif"))
 
 # Parameters
 cellSize <- 90
 
-# Get cell counts of unique values
-preCropValueCounts <- freq(secondaryStratumRaster)%>% 
+# Get cell counts of unique values ----
+bufferExtentCounts <- freq(secondaryStratumRaster)%>% 
                       as_tibble %>% 
-                      rename("Pre-Crop Cell Count" = count)
+                      rename(CellCount = count)
 
-postCropValueCounts <- freq(secondaryStratumCroppedRaster) %>% 
+b03ExtentCounts <- freq(secondaryStratumCroppedRaster) %>% 
                        as_tibble %>% 
-                       rename("Post-Crop Cell Count" = count)
+                       rename(CropCellCount = count)
                        
 
-mrcArea <- preCropValueCounts %>% 
-           left_join(postCropValueCounts, by = "value") %>% 
-           mutate("Pre-Crop MRC Area (m^2)" = `Pre-Crop Cell Count` * cellSize^2,
-                  "Post-Crop MRC Area (m^2)" = `Post-Crop Cell Count` * cellSize^2) %>% 
-           rename(Value = value)
+mrcArea <- bufferExtentCounts %>% 
+           left_join(b03ExtentCounts, by = "value") %>% 
+           replace_na(list(CropCellCount = 0)) %>% 
+           mutate(Ratio = CropCellCount/CellCount,
+                  BufferExtentArea = CellCount * cellSize^2,
+                  b03ExtentArea = CropCellCount * cellSize^2) %>% 
+           filter(Ratio != 1 & Ratio != 0) %>% 
+           select(value, BufferExtentArea, b03ExtentArea, Ratio) %>% 
+           rename("MRC ID" = value,
+                  "Buffer Extent Area (square meters)" = BufferExtentArea,
+                  "b03 Extent Area (square meters)" = b03ExtentArea)
+
+# Save tabular data to disk
+write_csv(mrcArea, file.path(b03RawTablesDir, "mrc-area-ratios.csv"))
