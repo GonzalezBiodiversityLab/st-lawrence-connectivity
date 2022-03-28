@@ -26,7 +26,7 @@ source("./b03/scripts/0-0-constants.R")
 library(Makurhini)
 
 # Parameters
-species <- "URAM"
+species <- "BLBR"
 dispersalMode <- "Natal" # "Gap"
 
 # Load data
@@ -43,11 +43,11 @@ dispersalDistance <- read_csv(file.path(b01b02RawTablesDir, "speciesDispersalPar
 #for (i in speciesList[c(5)]){
   
   # species <- i
-  
+
   ## Load data for focal species
   # Spatial data
-  habitatPatches <- raster(file.path(b03habitatDir, paste0(species, "_habitatPatch_Focal_Filtered_", coarseResolution, "m.tif")))
-  resistance <- raster(file.path(b03resistanceDir, paste0(species, "_resistance_Focal_", coarseResolution, "m.tif")))
+  habitatPatches <- raster(file.path(b03habitatDir, paste0(species, "_habitatPatch_Focal_Filtered_", myResolution, "m.tif")))
+  resistance <- raster(file.path(b03resistanceDir, paste0(species, "_resistance_Focal_", myResolution, "m.tif")))
   
   # Species dispersal maximal/or median distance 
   maxdist <- dispersalDistance[[which(dispersalDistance$Species == species), dispersalMode]]
@@ -76,22 +76,22 @@ dispersalDistance <- read_csv(file.path(b01b02RawTablesDir, "speciesDispersalPar
   # dPC
   writeRaster(PCfocal[[2]], 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCintra
   writeRaster(PCfocal[[3]], 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_Intra_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_Intra_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCflux
   writeRaster(PCfocal[[4]], 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_Flux_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_Flux_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCconnector
   writeRaster(PCfocal[[5]], 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_Connector_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_Connector_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)  		
   
   ## Optional - transform outputs using log transform and or rescaling 0 - 1 ----
@@ -118,21 +118,22 @@ dispersalDistance <- read_csv(file.path(b01b02RawTablesDir, "speciesDispersalPar
   # dPC
   writeRaster(pc, 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_0-1_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_0-1_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCintra
   writeRaster(intra, 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_Intra_0-1_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_Intra_0-1_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCflux
   writeRaster(flux, 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_Flux_0-1_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_Flux_0-1_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)  
   #dPCconnector
   writeRaster(connector, 
               file.path(b03patchImportanceDir, 
-                        paste0(species, "_PC_Connector_log&0-1_", dispersalMode, "_Focal_", coarseResolution, "m.tif")), 
+                        paste0(species, "_PC_Connector_log&0-1_", dispersalMode, "_Focal_", myResolution, "m.tif")), 
               overwrite=TRUE)
+
 #}
