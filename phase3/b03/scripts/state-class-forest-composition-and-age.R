@@ -81,6 +81,7 @@ stateClassCompositionAgeRaster <- reclassify(x = stateClassRaster,
                                              rcl = reclassMatrix)
 # Write tif to disk
 writeRaster(stateClassCompositionAgeRaster, 
-            file.path(b03ProcessedMapsDir, "StateClass_2010_90m.tif"))
+            file.path(b03ProcessedMapsDir, "StateClass_2010_90m.tif"),
+            overwrite = TRUE)
 
 
