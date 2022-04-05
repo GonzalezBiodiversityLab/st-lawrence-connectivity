@@ -68,7 +68,7 @@ for(species in speciesList){
   
   # Save outputs ----
   #geotif
-  writeRaster(shortBtwnRaster, file.path(b03networkDir, paste0(species, "_ShortBetweenness_", myResolution, "m.tif")), overwrite=TRUE)
+  writeRaster(shortBtwnRaster, file.path(b03networkDir, paste0(species, "_Betweenness_", myResolution, "m_b03.tif")), overwrite=TRUE)
   writeRaster(mpg$lcpPerimWeight, file.path(b03networkDir, paste0(species, "_LinkLength_", myResolution, "m_b03.tif")), overwrite=TRUE)
   writeRaster(lcpPerimWeightBinary, file.path(b03networkDir, paste0(species, "_LinkLength_01_", myResolution, "m_b03.tif")), overwrite=TRUE)
   #shapefile
@@ -127,7 +127,7 @@ for(species in speciesList){
 
   # Save outputs ----
   #geotif
-  writeRaster(maskedBtwnRaster, file.path(b03networkDir, paste0(species, "_LongBetweenness_", myResolution, "m.tif")), overwrite=TRUE)
+  writeRaster(maskedBtwnRaster, file.path(b03networkDir, paste0(species, "_Betweenness_", myResolution, "m.tif")), overwrite=TRUE)
   writeRaster(mpg$lcpPerimWeight, file.path(b03networkDir, paste0(species, "_LinkLength_", myResolution, "m.tif")), overwrite=TRUE)
   writeRaster(lcpPerimWeightBinary, file.path(b03networkDir, paste0(species, "_LinkLength_01_", myResolution, "m.tif")), overwrite=TRUE)
   #shapefile
