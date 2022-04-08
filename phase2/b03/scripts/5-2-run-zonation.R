@@ -26,19 +26,20 @@ Sys.setenv(TZ='GMT')
 
 # Input parameters
 # List of Zonation feature layers
-conservationCriteriaList<-data.frame(Weight=c(1, 1, 0.5, 0.5, 1),
+conservationCriteriaList<-data.frame(Weight=c(1, 0.5, 0.5, 0.5, 0.5, 1),
                                      FileName=c("habitatSuitabilityFocal_NatAreas_01_Z.tif",
                                                 "betweennessShortFocal_NatAreas_Log01_Z.tif",
+                                                "betweennessLongFocal_NatAreas_Log01_Z.tif",
                                                 "dECGapFocal_NatAreas_01_Z.tif",
                                                 "dECNatalFocal_NatAreas_01_Z.tif",
                                                 "currentFlowFocal_NatAreas_Log01_Z.tif"),
-                                     Directory=rep(file.path(b03zonationDir, "ZonationInputs"),5))
+                                     Directory=rep(file.path(b03zonationDir, "ZonationInputs"),6))
 
 # Names of additional layers
-protectedAreasName <- file.path(b03zonationDir, "Z_protectedAreas.tif")
+protectedAreasName <- file.path(b03zonationDir, "ZonationInputs", "Z_protectedAreas.tif")
 
 # Zonation parameters
-zonationExeFileName <- "C:\\Users\\Administrator\\AppData\\Local\\zonation 4.0.0rc1_compact\\bin\\zig4.exe"
+zonationExeFileName <- "C:\\Users\\Administrator\\AppData\\Local\\zonation-4.0.0rc1_compact-win64\\bin\\zig4.exe"
 # Removal rule
 # Reference table of removal rules
 # Code                      Name
