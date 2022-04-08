@@ -43,32 +43,25 @@ vignettes/*.pdf
 **/b03/libraries
 **/b03/data/spatial
 **/b03/data/tabular/old
-**/b03/model-inputs
+**/b03/model-inputs/spatial
 **/b03/model-outputs
 **/b03/scripts/old
 **/b03/grass7
 **/b03/results
-**/b03/libraries
 **/b01b02/inputs
 **/b01b02/model-inputs/spatial
 **/b01b02/maps
-**/b01b02/model-inputs/spatial
 **/b01b02/data/spatial
-**/b01b02/model-inputs/spatial
 **/b01b02/outputs
 **/b01b02/QGISstyles
 **/combined/maps
-**/b03/libraries
 
 # Files to be ignored
 phase2/junk
+phase2/rule.txt
 phase2/phase2.Rproj
 phase3/phase3.Rproj
-phase2/rule.txt
 phase2/b03/scripts/junk
-phase3/phase3.Rproj
-**/b03/model-inputs/spatial
-**/b03/model-outputs/
 **/b01b02/LinkagePriority
 QGISStyles
 Report
