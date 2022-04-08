@@ -43,8 +43,8 @@ vignettes/*.pdf
 **/b03/libraries
 **/b03/data/spatial
 **/b03/data/tabular/old
-**/b03/model-inputs/spatial
-**/b03/model-outputs
+**/b03/model-inputs
+**/b03/model-outputs/spatial
 **/b03/scripts/old
 **/b03/grass7
 **/b03/results
@@ -62,6 +62,8 @@ phase2/rule.txt
 phase2/phase2.Rproj
 phase3/phase3.Rproj
 phase2/b03/scripts/junk
+phase3/phase3.Rproj
+**/b03/model-outputs/
 **/b01b02/LinkagePriority
 QGISStyles
 Report
