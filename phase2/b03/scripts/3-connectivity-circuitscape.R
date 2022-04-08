@@ -11,7 +11,8 @@
 #   Outputs:
 #    -current density map
 #                                                                   
-# Script by B Rayfield for ApexRMS 									
+# Script by B Rayfield for ApexRMS 	
+# Run on a x2iedn.xlarge instance type (128GB RAM)
 #####################################################################
 
 # Load constants, functions, etc
@@ -30,7 +31,7 @@ dispersalDistance <- read_csv(file.path(b01b02RawTablesDir, "speciesDispersalPar
 for (species in speciesList){
   
   ## Load data for focal species
-  resistance <- raster(file.path(b03resistanceDir, paste0(species, "_resistance_", coarseResolution, "m.tif")))
+  resistance <- raster(file.path(b03resistanceDir, paste0(species, "_resistance_", myResolution, "m.tif")))
   
   # Create focal regions
   # Create focal region raster for N-S by adding top and bottom rows
@@ -134,14 +135,14 @@ for (species in speciesList){
     trim(.) # Trim extra white spaces  
   
   # Write outputs
-  writeRaster(currMapOMNI, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_", coarseResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_", coarseResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_log_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_", coarseResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNIFocal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_Focal_", coarseResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_Focal_", coarseResolution, "m.tif")), overwrite=TRUE)  
-  writeRaster(currMapOMNI_log_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_Focal_", coarseResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_", myResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_", myResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_log_01, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_", myResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNIFocal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_Focal_", myResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_01_Focal_", myResolution, "m.tif")), overwrite=TRUE)  
+  writeRaster(currMapOMNI_log_01Focal, file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_log_01_Focal_", myResolution, "m.tif")), overwrite=TRUE)  
   
-  file.copy(file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_Focal_", coarseResolution, "m.tif")),
-            file.path(b03circuitscapeDir, paste0(species, "_currentdensity_Focal_", coarseResolution, "m.tif")),
+  file.copy(file.path(b03circuitscapeDir, species, paste0(species, "_currentdensity_Focal_", myResolution, "m.tif")),
+            file.path(b03circuitscapeDir, paste0(species, "_currentdensity_Focal_", myResolution, "m.tif")),
             overwrite = TRUE)
 }

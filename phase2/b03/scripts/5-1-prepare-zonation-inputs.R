@@ -24,9 +24,9 @@ Sys.setenv(TZ='GMT')
 
 # Input parameters
 # List of Zonation feature layers
-conservationCriteriaList<-data.frame(Name=c("habitatSuitabilityFocal", "betweennessShortFocal", "dECGapFocal", "dECNatalFocal", "currentFlowFocal"),
-                                    FileName=c(paste0("habitatSuitability_Focal_", myResolution, "m.tif"), paste0("Betweenness_", myResolution, "m.tif"), "PC_Gap_240m.tif", "PC_Natal_240m.tif", paste0("currentdensity_Focal_", myResolution, "m.tif")),
-                                    Directory=c(b03habitatDir, b03networkDir, b03patchImportanceDir, b03patchImportanceDir, b03circuitscapeDir))
+conservationCriteriaList<-data.frame(Name=c("habitatSuitabilityFocal", "betweennessShortFocal", "betweennessLongFocal", "dECGapFocal", "dECNatalFocal", "currentFlowFocal"),
+                                     FileName=c(paste0("habitatSuitability_Focal_", myResolution, "m.tif"), paste0("Betweenness_b03_", myResolution, "m.tif"), paste0("Betweenness_", myResolution, "m.tif"), paste0("PC_Gap_Focal_", coarseResolution, "m.tif"), paste0("PC_Natal_Focal_", coarseResolution, "m.tif"), paste0("currentdensity_Focal_", myResolution, "m.tif")),
+                                     Directory=c(b03habitatDir, b03networkDir, b03networkDir, b03patchImportanceDir, b03patchImportanceDir, b03circuitscapeDir))
 
 # Names of additional layers
 landcoverName <- paste0("b03-landcover-", myResolution, "m.tif")
@@ -34,7 +34,7 @@ protectedAreasName <- paste0("protected-areas-150ha-btsl-focal-", myResolution,"
 studyAreaName <- paste0("b03-studyarea-", myResolution, "m-trimmed.tif")
 
 # Set up GRASS mapset for the first time
-doGRASSSetup <- F
+doGRASSSetup <- T
 
 ###############
 # GRASS setup #
@@ -60,13 +60,16 @@ if(doGRASSSetup){
       execGRASS("r.in.gdal", input=file.path(conservationCriteriaList$Directory[j], paste0(species, "_", conservationCriteriaList$FileName[j])), output=paste0(species, "_", conservationCriteriaList$Name[j]), flags=c("overwrite", "o"))
     }
   }
+  # Manually add BLBR patch importance (480m resolution)
+  execGRASS("r.in.gdal", input=file.path(b03patchImportanceDir, "BLBR_PC_Gap_Focal_480m.tif"), output="BLBR_dECGapFocal", flags=c("overwrite", "o"))
+  execGRASS("r.in.gdal", input=file.path(b03patchImportanceDir, "BLBR_PC_Natal_Focal_480m.tif"), output="BLBR_dECNatalFocal", flags=c("overwrite", "o"))
 }else{
   initGRASS(gisBase=gisBase, gisDbase=gisDbase, location=paste0("BTSL_", myResolution, "m"), mapset='Zonation', override=TRUE)
 }
 
 # Set the geographic region
 execGRASS('g.region', raster='studyArea1', res=paste0(myResolution))
-            
+
 # Massage study area and protected areas layers
 execGRASS("r.mapcalc", expression='studyArea0=if(studyArea1>0,0)', flags=c('overwrite'))
 execGRASS('r.reclass.area', input='protectedAreas', output='protectedAreas150', value=150, mode='greater', flags=c('overwrite', 'd'))
@@ -102,7 +105,7 @@ for(i in 1:length(speciesList)){
   species<-speciesList[i]
   execGRASS('r.mapcalc', expression=paste0(species, '_habitatSuitabilityFocal_NatAreas_01=', species, '_habitatSuitabilityFocal_NatAreas/100.0'), flags=c('overwrite'))
 }  
-# Update working names of conervation criteria
+# Update working names of conservation criteria
 conservationCriteriaNames[1] <- paste0(conservationCriteriaNames[1], "_01") 
 
 
@@ -113,7 +116,7 @@ for(i in 1:length(speciesList)){
   for(j in 1:length(connectivityCriteriaNames)){
     #log transformation
     execGRASS('r.mapcalc',expression=paste0(species, '_', connectivityCriteriaNames[j],'_Log=log(', species, '_', connectivityCriteriaNames[j],',10)'), flags=c('overwrite'))
-
+    
     #rescale 0 - 1
     statistic <- execGRASS("r.univar", map = paste0(species, '_', connectivityCriteriaNames[j], '_Log'), flags = c("g", "quiet"), intern = TRUE, legacyExec = TRUE)
     mapMax <- format(as.numeric(strsplit(statistic[agrep(statistic, pattern = "max")], "=")[[1]][[2]]), nsmall=2)
@@ -163,19 +166,19 @@ write.csv(maxMinTable, file.path(b03zonationDir, "ZonationInputs", "MaxMinTable.
 #Summed species maps
 execGRASS('r.mapcalc',expression='all_habitatSuitabilityFocal_NatAreas=(if(isnull(MAAM_habitatSuitabilityFocal_NatAreas_01),0,MAAM_habitatSuitabilityFocal_NatAreas_01)+if(isnull(BLBR_habitatSuitabilityFocal_NatAreas_01),0,BLBR_habitatSuitabilityFocal_NatAreas_01)+if(isnull(URAM_habitatSuitabilityFocal_NatAreas_01),0,URAM_habitatSuitabilityFocal_NatAreas_01)+if(isnull(PLCI_habitatSuitabilityFocal_NatAreas_01),0,PLCI_habitatSuitabilityFocal_NatAreas_01)+if(isnull(RASY_habitatSuitabilityFocal_NatAreas_01),0,RASY_habitatSuitabilityFocal_NatAreas_01))*studyArea1', flags=c('overwrite'))
 execGRASS('r.mapcalc',expression='all_currentFlowFocal_NatAreas=(if(isnull(MAAM_currentFlowFocal_NatAreas_Log01),0,MAAM_currentFlowFocal_NatAreas_Log01)+if(isnull(BLBR_currentFlowFocal_NatAreas_Log01),0,BLBR_currentFlowFocal_NatAreas_Log01)+if(isnull(URAM_currentFlowFocal_NatAreas_Log01),0,URAM_currentFlowFocal_NatAreas_Log01)+if(isnull(PLCI_currentFlowFocal_NatAreas_Log01),0,PLCI_currentFlowFocal_NatAreas_Log01)+if(isnull(RASY_currentFlowFocal_NatAreas_Log01),0,RASY_currentFlowFocal_NatAreas_Log01))*studyArea1', flags=c('overwrite'))
-#execGRASS('r.mapcalc',expression='all_betweennessLongFocal_NatAreas=(if(isnull(MAAM_betweennessLongFocal_NatAreas_01),0,MAAM_betweennessLongFocal_NatAreas_01)+if(isnull(BLBR_betweennessLongFocal_NatAreas_01),0,BLBR_betweennessLongFocal_NatAreas_01)+if(isnull(URAM_betweennessLongFocal_NatAreas_01),0,URAM_betweennessLongFocal_NatAreas_01)+if(isnull(PLCI_betweennessLongFocal_NatAreas_01),0,PLCI_betweennessLongFocal_NatAreas_01)+if(isnull(RASY_betweennessLongFocal_NatAreas_01),0,RASY_betweennessLongFocal_NatAreas_01))*studyArea1', flags=c('overwrite'))
+execGRASS('r.mapcalc',expression='all_betweennessLongFocal_NatAreas=(if(isnull(MAAM_betweennessLongFocal_NatAreas_01),0,MAAM_betweennessLongFocal_NatAreas_01)+if(isnull(BLBR_betweennessLongFocal_NatAreas_01),0,BLBR_betweennessLongFocal_NatAreas_01)+if(isnull(URAM_betweennessLongFocal_NatAreas_01),0,URAM_betweennessLongFocal_NatAreas_01)+if(isnull(PLCI_betweennessLongFocal_NatAreas_01),0,PLCI_betweennessLongFocal_NatAreas_01)+if(isnull(RASY_betweennessLongFocal_NatAreas_01),0,RASY_betweennessLongFocal_NatAreas_01))*studyArea1', flags=c('overwrite'))
 execGRASS('r.mapcalc',expression='all_betweennessShortFocal_NatAreas=(if(isnull(MAAM_betweennessShortFocal_NatAreas_01),0,MAAM_betweennessShortFocal_NatAreas_01)+if(isnull(BLBR_betweennessShortFocal_NatAreas_01),0,BLBR_betweennessShortFocal_NatAreas_01)+if(isnull(URAM_betweennessShortFocal_NatAreas_01),0,URAM_betweennessShortFocal_NatAreas_01)+if(isnull(PLCI_betweennessShortFocal_NatAreas_01),0,PLCI_betweennessShortFocal_NatAreas_01)+if(isnull(RASY_betweennessShortFocal_NatAreas_01),0,RASY_betweennessShortFocal_NatAreas_01))*studyArea1', flags=c('overwrite'))
 execGRASS('r.mapcalc',expression='all_dECGapFocal_NatAreas=(if(isnull(MAAM_dECGapFocal_NatAreas_01),0,MAAM_dECGapFocal_NatAreas_01)+if(isnull(BLBR_dECGapFocal_NatAreas_01),0,BLBR_dECGapFocal_NatAreas_01)+if(isnull(URAM_dECGapFocal_NatAreas_01),0,URAM_dECGapFocal_NatAreas_01)+if(isnull(PLCI_dECGapFocal_NatAreas_01),0,PLCI_dECGapFocal_NatAreas_01)+if(isnull(RASY_dECGapFocal_NatAreas_01),0,RASY_dECGapFocal_NatAreas_01))*studyArea1', flags=c('overwrite'))
 execGRASS('r.mapcalc',expression='all_dECNatalFocal_NatAreas=(if(isnull(MAAM_dECNatalFocal_NatAreas_01),0,MAAM_dECNatalFocal_NatAreas_01)+if(isnull(BLBR_dECNatalFocal_NatAreas_01),0,BLBR_dECNatalFocal_NatAreas_01)+if(isnull(URAM_dECNatalFocal_NatAreas_01),0,URAM_dECNatalFocal_NatAreas_01)+if(isnull(PLCI_dECNatalFocal_NatAreas_01),0,PLCI_dECNatalFocal_NatAreas_01)+if(isnull(RASY_dECNatalFocal_NatAreas_01),0,RASY_dECNatalFocal_NatAreas_01))*studyArea1', flags=c('overwrite'))
 execGRASS('r.mapcalc',expression='all_connectivityFocal_NatAreas=all_currentFlowFocal_NatAreas+all_betweennessShortFocal_NatAreas+all_dECGapFocal_NatAreas+all_dECNatalFocal_NatAreas', flags=c('overwrite'))
-#execGRASS('r.mapcalc',expression='all_connectivityFocal_NatAreas=all_currentFlowFocal_NatAreas+all_betweennessLongFocal_NatAreas+all_betweennessShortFocal_NatAreas+all_dECGapFocal_NatAreas+all_dECNatalFocal_NatAreas', flags=c('overwrite'))
+execGRASS('r.mapcalc',expression='all_connectivityFocal_NatAreas=all_currentFlowFocal_NatAreas+all_betweennessLongFocal_NatAreas+all_betweennessShortFocal_NatAreas+all_dECGapFocal_NatAreas+all_dECNatalFocal_NatAreas', flags=c('overwrite'))
 execGRASS('r.mapcalc',expression='all_qualityconnectivityFocal_NatAreas=all_habitatSuitabilityFocal_NatAreas+all_currentFlowFocal_NatAreas+all_betweennessShortFocal_NatAreas+all_dECGapFocal_NatAreas+all_dECNatalFocal_NatAreas', flags=c('overwrite'))
-#execGRASS('r.mapcalc',expression='all_qualityconnectivityFocal_NatAreas=all_habitatSuitabilityFocal_NatAreas+all_currentFlowFocal_NatAreas+all_betweennessLongFocal_NatAreas+all_betweennessShortFocal_NatAreas+all_dECGapFocal_NatAreas+all_dECNatalFocal_NatAreas', flags=c('overwrite'))
+execGRASS('r.mapcalc',expression='all_qualityconnectivityFocal_NatAreas=all_habitatSuitabilityFocal_NatAreas+all_currentFlowFocal_NatAreas+all_betweennessLongFocal_NatAreas+all_betweennessShortFocal_NatAreas+all_dECGapFocal_NatAreas+all_dECNatalFocal_NatAreas', flags=c('overwrite'))
 
 #Save summed species maps
 execGRASS('r.out.gdal',input='all_habitatSuitabilityFocal_NatAreas',output=file.path(b03habitatDir,paste0('ALL_habitatSuitability_NatAreas_01_', myResolution, 'm.tif')),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
 execGRASS('r.out.gdal',input='all_currentFlowFocal_NatAreas',output=file.path(b03circuitscapeDir, paste0("ALL_currendensity_NatAreas_Log01_", myResolution, "m.tif")),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
-#execGRASS('r.out.gdal',input='all_betweennessLongFocal_NatAreas',output=file.path(b03networkDir,'all_betweennessLong.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
+execGRASS('r.out.gdal',input='all_betweennessLongFocal_NatAreas',output=file.path(b03networkDir,paste0('ALL_betweennessLong_01_', myResolution,'m.tif')),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
 execGRASS('r.out.gdal',input='all_betweennessShortFocal_NatAreas',output=file.path(b03networkDir,paste0('ALL_betweennessShort_01_', myResolution, 'm.tif')),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
 execGRASS('r.out.gdal',input='all_dECGapFocal_NatAreas',output=file.path(b03patchImportanceDir,'ALL_dECGap_01_240m.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
 execGRASS('r.out.gdal',input='all_dECNatalFocal_NatAreas',output=file.path(b03patchImportanceDir,'ALL_dECNatal_01_240m.tif'),format='GTiff',createopt='COMPRESS=LZW',flags=c('overwrite'))
