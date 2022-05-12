@@ -1,4 +1,3 @@
-# a254
 Scripts associated with the project "A connectivity analysis of forested ecosystems in the St. Lawrence Lowlands of Quebec, Canada"
 
 Descriptions of the methodology are available in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
