@@ -2,7 +2,7 @@
 
 Descriptions of the methodology are available in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
 
-The top-level folders in this repo are organized in reference to specific phases within the St. Lawrence Lowlands connectivity analysis:<br />
+The top-level folders in this repository are organized in reference to specific phases within the St. Lawrence Lowlands connectivity analysis:<br />
 **phase2**: Conservation prioritization of natural habitats in the St. Lawrence Lowlands based on their importance for ecological connectivity<br />
 **phase3**: Changing terrestrial habitat connectivity within the St. Lawrence Lowlands under scenarios of climate and landcover change<br />
 
