@@ -68,17 +68,22 @@ b03RawMapsDir <- file.path(b03Dir, "data", "spatial")
 b03RawTablesDir <- file.path(b03Dir, "data", "tabular")
 b03ProcessedMapsDir <- file.path(b03Dir, "model-inputs", "spatial")
 b03ProcessedTabularDir <- file.path(b03Dir, "model-inputs", "tabular")
-# b02 
+# b01b02 
 b01b02RawMapsDir <- file.path(b01b02Dir, "inputs", "rawData", "maps")
 b01b02RawTablesDir <- file.path(b01b02Dir, "inputs", "rawData", "tables")
 
 ## Composite directories ----
+# b03
 b03habitatDir <- file.path(b03Dir, "model-outputs", "spatial", "1.Habitat")
 b03resistanceDir <- file.path(b03Dir, "model-outputs", "spatial", "2.Resistance")
 b03networkDir <- file.path(b03Dir, "model-outputs", "spatial", "3.NetworkConnectivity")
 b03patchImportanceDir <- file.path(b03Dir, "model-outputs", "spatial", "4.PatchImportance")
 b03circuitscapeDir <- file.path(b03Dir, "model-outputs", "spatial", "5.Circuitscape")
 b03zonationDir <-file.path(b03Dir, "model-outputs", "spatial", "6.Zonation")
+b03linkagePriorityDir <-file.path(b03Dir, "model-outputs", "spatial", "7.LinkagePriority")
+
+# b01b02 
+b01b02linkagePriorityDir <-file.path(b01b02Dir, "outputs", "6.LinkagePrioritization")
 
 # Functions ----
 # Rescale a raster layer
