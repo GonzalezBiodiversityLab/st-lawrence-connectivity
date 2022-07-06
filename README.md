@@ -7,7 +7,7 @@ The top-level folders in this repository are organized in reference to specific 
 **phase3**: Changing terrestrial habitat connectivity within the St. Lawrence Lowlands under scenarios of climate and landcover change<br />
 
 Subfolders correspond to each natural region (région naturelle) within the St. Lawrence Lowlands ecoregion:<br />
-**b01b02**: Plain du haut Saint-Laurent and Plaine du moyen Saint-Laurent<br />
+**b01b02**: Plaine du haut Saint-Laurent and Plaine du moyen Saint-Laurent<br />
 **b03**: Plaine d'Ottawa
 
 <p align="center">
