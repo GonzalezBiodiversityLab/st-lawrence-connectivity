@@ -1,6 +1,6 @@
 # Scripts associated with the project "A connectivity analysis of forested ecosystems in the St. Lawrence Lowlands of Quebec, Canada"
 
-Descriptions of the methodology are available in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
+*BR to update* Descriptions of the methodology are available in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
 
 The top-level folders in this repository are organized in reference to specific phases within the St. Lawrence Lowlands connectivity analysis:<br />
 **phase2**: Conservation prioritization of natural habitats in the St. Lawrence Lowlands based on their importance for ecological connectivity<br />
