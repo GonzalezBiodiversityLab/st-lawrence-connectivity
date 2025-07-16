@@ -1,0 +1,2 @@
+#!/bin/bash
+/home/glaroc/zonation/build/zig4/zig4 -r /lustre03/project/6033499/lowlands/ConnectBTSL/Phase-III/zonation/projects/btsl/inputs/settings.dat /lustre03/project/6033499/lowlands/ConnectBTSL/Phase-III/zonation/projects/btsl/inputs/all_inclusive_run.spp /lustre03/project/6033499/lowlands/ConnectBTSL/Phase-III/zonation/projects/btsl/outputs_final_reweight/all_inclusive_run.txt 0.0 0 1.0 0 0 --grid-output-formats compressed-tif
