@@ -1,5 +1,4 @@
-Code for connectivity case study in the St. Lawrence Lowlands ecoregion in Quebec, Canada.
-Published in "Linking multispecies connectivity models and long-term scenarios to guide conservation" by Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review)
+Code for connectivity case study in the St. Lawrence Lowlands ecoregion in Quebec, Canada published in "Linking multispecies connectivity models and long-term scenarios to guide conservation" by Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review).
 
 Data availability: https://www.donneesquebec.ca/recherche/dataset/connectivite-ecologique-des-milieux-naturels-dans-les-basses-terres-du-saint-laurent
 
