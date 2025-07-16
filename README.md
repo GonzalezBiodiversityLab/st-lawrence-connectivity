@@ -1,17 +1,11 @@
-# Scripts associated with the project "A connectivity analysis of forested ecosystems in the St. Lawrence Lowlands of Quebec, Canada"
+Code for case study featured in "Linking multispecies connectivity models and long-term scenarios to guide conservation" by Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review)
 
-*BR to update* Descriptions of the methodology are available in [English](https://quebio.ca/en/connectivity_report) and [French](https://quebio.ca/fr/rapport_connectivite).<br />
+presente-and-future prioritization - code to identify conservation priorities based on habitat suitability and connectivity criteria both in the present and unser future scenarios of land use and climate change
+Technical report (French) - https://www.environnement.gouv.qc.ca/biodiversite/cadre-ecologique/modelisation-connectivite-basses-terres-saint-laurent.pdf
 
-The top-level folders in this repository are organized in reference to specific phases within the St. Lawrence Lowlands connectivity analysis:<br />
-**phase2**: Conservation prioritization of natural habitats in the St. Lawrence Lowlands based on their importance for ecological connectivity<br />
-**phase3**: Changing terrestrial habitat connectivity within the St. Lawrence Lowlands under scenarios of climate and landcover change<br />
 
-Subfolders correspond to each natural region (région naturelle) within the St. Lawrence Lowlands ecoregion:<br />
-**b01b02**: Plaine du haut Saint-Laurent and Plaine du moyen Saint-Laurent<br />
-**b03**: Plaine d'Ottawa
+present-only prioritization - code to identify conservation priorities based solely on present-day habitat suitability and connectivity criteria
+Technical report (French) - https://www.environnement.gouv.qc.ca/biodiversite/cadre-ecologique/priorisation-connectivite-basses-terres-saint-laurent.pdf
 
-<p align="center">
-  <img src="https://i.imgur.com/2tjeLfl.png"/>
- </p>
-<p align="center">Our analysis encompasses the areas of each natural region within Québec only (Dark grey). Image from Bellavance et al. 2019. MELCC.
-   </p>
+
+Data availability: https://www.donneesquebec.ca/recherche/dataset/connectivite-ecologique-des-milieux-naturels-dans-les-basses-terres-du-saint-laurent
