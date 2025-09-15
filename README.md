@@ -15,23 +15,14 @@ Manuscript under review: Linking multispecies connectivity models and long-term 
 
 ```text
 st-lawrence-connectivity/
-├─ present-and-future prioritization/      # Mixed scripts: present + future scenarios across regions
+├─ present-and-future prioritization/      # Scenario-based analyses (present + future) across CERQ natural regions
 │  ├─ data/                                # Inputs (rasters, species lists, masks, params)
-│  ├─ scripts/                             # Analysis code reused across regions (R, shell)
-│  ├─ outputs/                             # Intermediate/final results (tables, rasters)
-│  └─ figures/                             # Publication-ready plots/maps
-│
-├─ present-only prioritization/            # Present-day runs by CERQ Level-2 “natural regions”
-│  ├─ b01b02/                              # B01+B02 combined (Plaine du haut & moyen Saint-Laurent)
-│  │   ├─ data/
-│  │   ├─ scripts/
-│  │   ├─ outputs/
-│  │   └─ figures/
-│  └─ b03/                                 # B03 (Plaine d’Ottawa)
-│      ├─ data/
-│      ├─ scripts/
-│      ├─ outputs/
-│      └─ figures/
-│
-├─ .gitignore
-└─ README.md
+│  ├─ scripts/                             # Analysis code shared across regions (R/shell)
+│  └─ libraries/                           # Parameterized ST-Sim library of landscape change
+└─ present-only prioritization/            # Present-day analyses by CERQ Level-2 natural regions (régions naturelles: B01, B02, B03)
+   ├─ b01b02/                              # B01+B02 combined (Plaine du haut & moyen Saint-Laurent)
+   │  └─ scripts/                          # Subregion-specific code for the combined B01+B02 runs
+   └─ b03/                                 # B03 (Plaine d'Ottawa)
+      ├─ data/                             # Inputs specific to B03 adapted from B02
+      └─ scripts/                          # Subregion-specific code for B03
+
