@@ -25,7 +25,9 @@ https://www.environnement.gouv.qc.ca/biodiversite/cadre-ecologique/priorisation-
 
 Manuscript in review: Linking multispecies connectivity models and long-term scenarios to guide conservation — Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review).
 
-Repository Structure
+## Repository Structure
+
+```text
 st-lawrence-connectivity/
 ├─ present-and-future prioritization/      # Mixed scripts: present + future scenarios across regions
 │  ├─ data/                                # Inputs (rasters, species lists, masks, params)
