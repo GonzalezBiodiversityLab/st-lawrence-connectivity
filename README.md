@@ -9,7 +9,7 @@ https://www.environnement.gouv.qc.ca/biodiversite/cadre-ecologique/modelisation-
 Technical report — Present-only results (French)
 https://www.environnement.gouv.qc.ca/biodiversite/cadre-ecologique/priorisation-connectivite-basses-terres-saint-laurent.pdf
 
-Manuscript in review: Linking multispecies connectivity models and long-term scenarios to guide conservation — Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review).
+Manuscript under review: Linking multispecies connectivity models and long-term scenarios to guide conservation — Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review).
 
 ## Repository Structure
 
