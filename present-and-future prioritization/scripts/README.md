@@ -1,6 +1,6 @@
 # Scripts - present-and-future prioritization (archival)
 
-**Purpose.** This folder contains an archival snapshot of analysis scripts used by three analysts for the “present-and-future prioritization” work. Scripts are provided **as-is** in the spirit of open science and transparency.
+**Purpose.** This folder contains an archival snapshot of analysis scripts used by four analysts for the “present-and-future prioritization” work. Scripts are provided **as-is** in the spirit of open science and transparency.
 
 **Important notes**
 - These scripts are **not a unified, runnable pipeline**. Different files assume different directory structures and machine-specific paths.
@@ -13,16 +13,13 @@
 
 **Compute environment (high level)**
 - Primary language: **R** (with common spatial/analysis packages).
-- Other tooling used in the project: **Circuitscape/Omniscape**, **GDAL/QGIS** (exact versions may vary; list known versions if available).
+- Other tooling used in the project: **Circuitscape**, **GDAL/QGIS**, **SyncroSim** (exact versions may vary; list known versions if available).
 - OS: mixed (analyst-dependent).
-
-**How to cite**
-- Cite the manuscript and this repository release (see GitHub Releases). If a DOI is available (Zenodo), cite that DOI as well.
 
 **Known limitations**
 - Analyst-specific absolute paths.
 - Heterogeneous style and assumptions across scripts.
-- Some scripts reference inputs that are large or under restricted access.
+- Some scripts reference inputs that are large or not publicly hosted.
 
 ---
 
@@ -49,4 +46,4 @@ _Scripts are provided as-is from multiple analysts; paths and assumptions differ
 | 09 | `09-05_connectivity-CompositeFigures.R` | Assemble composite connectivity figures for the report/manuscript. |
 | 10 | `10_zonation-preprocess.R` | Prepare Zonation prioritization inputs. |
 
-> Tip: This index is descriptive only; it does not guarantee re-runnability.
+> This index is descriptive only; it does not guarantee re-runnability.
