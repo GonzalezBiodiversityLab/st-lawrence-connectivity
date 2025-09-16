@@ -28,7 +28,7 @@
 
 _Scripts are provided as-is from multiple analysts; paths and assumptions differ. The index is ordered by the leading step numbers (e.g., 09-01, 09-02). These numbers are for navigation only; scripts were authored independently._
 
-| Step | File | Brief purpose |
+| Step | File | Description |
 |---:|---|---|
 | 00 | `00_constants.R` | Define shared constants, options, and reusable paths/parameters for downstream scripts 01 - 07. |
 | 01 | `01_crop-strata.R` | Prepare analysis strata (e.g., natural region strata, protected areas) used in landscape change model. |
