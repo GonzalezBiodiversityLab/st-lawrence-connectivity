@@ -16,10 +16,10 @@ Manuscript under review: Linking multispecies connectivity models and long-term 
 ```text
 st-lawrence-connectivity/
 ├─ present-and-future prioritization/      # Scenario-based analyses (present + future) across CERQ natural regions
-│  ├─ data/                                # Inputs (rasters, species lists, masks, params)
+│  ├─ data/                                # Inputs (species lists, reclass tables, params)
 │  ├─ scripts/                             # Analysis code shared across regions (R/shell)
 │  └─ libraries/                           # Parameterized ST-Sim library of landscape change
-└─ present-only prioritization/            # Present-day analyses by CERQ Level-2 natural regions (régions naturelles: B01, B02, B03)
+└─ present-only prioritization/            # Contemporary baseline (~2015) analyses by CERQ Level-2 natural regions (régions naturelles: B01, B02, B03)
    ├─ b01b02/                              # B01+B02 combined (Plaine du haut & moyen Saint-Laurent)
    │  └─ scripts/                          # Subregion-specific code for the combined B01+B02 runs
    └─ b03/                                 # B03 (Plaine d'Ottawa)
