@@ -1,6 +1,7 @@
 # Scripts - present-and-future prioritization (archival)
 
-**Purpose.** This folder contains an archival snapshot of analysis scripts used by four analysts for the “present-and-future prioritization” work. Scripts are provided **as-is** in the spirit of open science and transparency.
+**Purpose** 
+- This folder contains an archival snapshot of analysis scripts used by four analysts for the “present-and-future prioritization” work. Scripts are provided **as-is** in the spirit of open science and transparency.
 
 **Important notes**
 - These scripts are **not a unified, runnable pipeline**. Different files assume different directory structures and machine-specific paths.
