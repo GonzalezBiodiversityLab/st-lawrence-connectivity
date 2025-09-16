@@ -45,5 +45,7 @@ _Scripts are provided as-is from multiple analysts; paths and assumptions differ
 | 09 | `09-04_connectivity-GraphicalSummaries.R` | Produce graphical summaries (figures/plots) of connectivity results. |
 | 09 | `09-05_connectivity-CompositeFigures.R` | Assemble composite connectivity figures for the report/manuscript. |
 | 10 | `10_zonation-preprocess.R` | Prepare Zonation prioritization inputs. |
+| 11 | `zonation_run/` | Shell scripts (.sh) to prepare and run Zonation analyses on the Béluga HPC cluster (Digital Research Alliance of Canada). |
+
 
 > This index is descriptive only; it does not guarantee re-runnability.
