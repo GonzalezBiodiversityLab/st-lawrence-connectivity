@@ -3,13 +3,13 @@
 This repository contains analyses of ecological connectivity prioritization in the St. Lawrence Lowlands ecoregion in Quebec, Canada.
 Results are summarized in two technical reports and in a manuscript currently under review.
 
-Technical report — Present & future results (French)
+Technical report - Present & future results (French)
 https://www.environnement.gouv.qc.ca/biodiversite/cadre-ecologique/modelisation-connectivite-basses-terres-saint-laurent.pdf
 
-Technical report — Present-only results (French)
+Technical report - Present-only results (French)
 https://www.environnement.gouv.qc.ca/biodiversite/cadre-ecologique/priorisation-connectivite-basses-terres-saint-laurent.pdf
 
-Manuscript under review: Linking multispecies connectivity models and long-term scenarios to guide conservation — Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review).
+Manuscript under review: Linking multispecies connectivity models and long-term scenarios to guide conservation - Rayfield, Boulanger, Larocque, Lucet, Teixeira-Martins, and Gonzalez (in review).
 
 ## Repository Structure
 
