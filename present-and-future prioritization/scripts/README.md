@@ -13,7 +13,7 @@
 
 **Compute environment (high level)**
 - Primary language: **R** (with common spatial/analysis packages).
-- Other tooling used in the project: **Circuitscape**, **GDAL/QGIS**, **SyncroSim** (exact versions may vary; list known versions if available).
+- Other tooling used in the project: **Circuitscape**, **GDAL/QGIS**, **SyncroSim**.
 - OS: mixed (analyst-dependent).
 
 **Known limitations**
