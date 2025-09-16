@@ -25,7 +25,7 @@
 
 ## Script index (archival)
 
-_Scripts are provided as-is from multiple analysts; paths and assumptions differ. Order follows the step numbers in the filenames._
+_Scripts are provided as-is from multiple analysts; paths and assumptions differ. The index is ordered by the leading step numbers (e.g., 09-01, 09-02). These numbers are for navigation only; scripts were authored independently._
 
 | Step | File | Brief purpose |
 |---:|---|---|
